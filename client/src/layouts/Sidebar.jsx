@@ -1,52 +1,114 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   AiOutlineMenu,
   AiOutlineTwitter,
   AiOutlineGithub,
   AiOutlineInstagram,
 } from "react-icons/ai";
+import { FaRegUserCircle } from "react-icons/fa";
+import Cart from "../components/cart/Cart";
 
 import { images } from "../constants";
 
 const Sidebar = () => {
+  const sideBarRef = useRef(null);
+  const [menuIsShown, setMenuIsShown] = useState(false);
+  const [sideBarWidth, setSideBarWidth] = useState(0);
+
+  const toggleMenuHandler = () => {
+    setMenuIsShown((prevState) => {
+      return !prevState;
+    });
+  };
+
+  useEffect(() => {
+    setSideBarWidth(sideBarRef.current.clientWidth);
+  }, []);
+
+  const spaceFromLeft = `left-[${sideBarWidth}px]`;
+
   return (
-    <aside className="bg-palette-chineseBlack text-white h-screen overflow-y-auto">
-      <div className="flex flex-col justify-between items-center w-full h-full p-5">
-        <img className="w-10 h-auto" src={images.logo} alt="logo" />
-        <div>
-          <AiOutlineMenu className="w-8 h-8" />
+    <>
+      <div
+        ref={sideBarRef}
+        className="sticky top-0 z-10 bg-palette-chineseBlack text-white lg:h-screen overflow-y-auto"
+      >
+        <div className="flex flex-row lg:flex-col justify-between items-center w-full h-full p-5">
+          <div className="flex items-center space-x-4 lg:space-x-0">
+            <img className="w-10 h-auto" src={images.logo} alt="logo" />
+            <FaRegUserCircle className="block lg:hidden w-7 h-7" />
+          </div>
+          <div className="flex space-x-4 lg:space-x-0 items-center">
+            <Cart className="lg:hidden" />
+            <div>
+              <AiOutlineMenu
+                onClick={toggleMenuHandler}
+                className="w-8 h-8 cursor-pointer"
+              />
+            </div>
+          </div>
+          <ul className="hidden lg:block space-y-2">
+            <li>
+              <a
+                href="https://twitter.com/mmdrz003"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <AiOutlineTwitter className="w-5 h-5 hover:scale-110" />
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/mohammadrz003"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <AiOutlineGithub className="w-5 h-5 hover:scale-110" />
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.instagram.com/moonfo_dev/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <AiOutlineInstagram className="w-5 h-5 hover:scale-110" />
+              </a>
+            </li>
+          </ul>
         </div>
-        <ul className="space-y-2">
-          <li>
-            <a
-              href="https://twitter.com/mmdrz003"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <AiOutlineTwitter className="w-5 h-5 hover:scale-110" />
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://github.com/mohammadrz003"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <AiOutlineGithub className="w-5 h-5 hover:scale-110" />
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://www.instagram.com/moonfo_dev/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <AiOutlineInstagram className="w-5 h-5 hover:scale-110" />
-            </a>
-          </li>
-        </ul>
       </div>
-    </aside>
+      {menuIsShown && (
+        <div
+          className="hidden lg:block absolute bg-white opacity-60 top-0 bottom-0 right-0 z-[9]"
+          style={{ left: `${sideBarWidth}px` }}
+          onClick={toggleMenuHandler}
+        />
+      )}
+      {menuIsShown && (
+        <div
+          className={`hidden lg:flex items-center px-20 py-10 absolute top-0 bottom-0 w-1/3 h-full bg-palette-chineseBlack z-10 border-l border-l-[#202020]`}
+          style={{ left: `${sideBarWidth}px` }}
+        >
+          <ul className="text-white uppercase font-normal text-4xl space-y-5">
+            <li className="tracking-wider">Shop</li>
+            <li className="tracking-wider">About</li>
+            <li className="tracking-wider">Contact</li>
+          </ul>
+        </div>
+      )}
+      {menuIsShown && (
+        <div
+          className={`flex lg:hidden justify-center items-center p-5 fixed left-0 right-0 top-[80px] bottom-0 bg-palette-chineseBlack z-10 border-t border-t-[#202020]`}
+        >
+          <ul className="text-white uppercase font-normal text-center text-3xl space-y-5">
+            <li className="tracking-wider">Shop</li>
+            <li className="tracking-wider">About</li>
+            <li className="tracking-wider">Contact</li>
+          </ul>
+        </div>
+      )}
+    </>
   );
 };
 
