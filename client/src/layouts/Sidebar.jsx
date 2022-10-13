@@ -1,14 +1,17 @@
 import React, { useRef, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   AiOutlineMenu,
   AiOutlineTwitter,
   AiOutlineGithub,
   AiOutlineInstagram,
+  AiOutlineClose,
 } from "react-icons/ai";
 import { FaRegUserCircle } from "react-icons/fa";
-import Cart from "../components/cart/Cart";
 
+import Cart from "../components/cart/Cart";
 import { images } from "../constants";
+import UserProfileButton from "../components/UserProfileButton";
 
 const Sidebar = () => {
   const sideBarRef = useRef(null);
@@ -25,8 +28,6 @@ const Sidebar = () => {
     setSideBarWidth(sideBarRef.current.clientWidth);
   }, []);
 
-  const spaceFromLeft = `left-[${sideBarWidth}px]`;
-
   return (
     <>
       <div
@@ -35,16 +36,27 @@ const Sidebar = () => {
       >
         <div className="flex flex-row lg:flex-col justify-between items-center w-full h-full p-5">
           <div className="flex items-center space-x-4 lg:space-x-0">
-            <img className="w-10 h-auto" src={images.logo} alt="logo" />
-            <FaRegUserCircle className="block lg:hidden w-7 h-7" />
+            <Link to="/">
+              <img className="w-10 h-auto" src={images.logo} alt="logo" />
+            </Link>
+            <div className="flex items-center lg:hidden">
+              <UserProfileButton />
+            </div>
           </div>
           <div className="flex space-x-4 lg:space-x-0 items-center">
             <Cart className="lg:hidden" />
             <div>
-              <AiOutlineMenu
-                onClick={toggleMenuHandler}
-                className="w-8 h-8 cursor-pointer"
-              />
+              {!menuIsShown ? (
+                <AiOutlineMenu
+                  onClick={toggleMenuHandler}
+                  className="w-8 h-8 cursor-pointer"
+                />
+              ) : (
+                <AiOutlineClose
+                  onClick={toggleMenuHandler}
+                  className="w-8 h-8 cursor-pointer"
+                />
+              )}
             </div>
           </div>
           <ul className="hidden lg:block space-y-2">
@@ -91,9 +103,17 @@ const Sidebar = () => {
           style={{ left: `${sideBarWidth}px` }}
         >
           <ul className="text-white uppercase font-normal text-4xl space-y-5">
-            <li className="tracking-wider">Shop</li>
-            <li className="tracking-wider">About</li>
-            <li className="tracking-wider">Contact</li>
+            <li className="tracking-wider">
+              <Link to="/">Shop</Link>
+            </li>
+
+            <li className="tracking-wider">
+              <Link to="/about">About</Link>
+            </li>
+
+            <li className="tracking-wider">
+              <Link to="/contact">Contact</Link>
+            </li>
           </ul>
         </div>
       )}
@@ -102,9 +122,17 @@ const Sidebar = () => {
           className={`flex lg:hidden justify-center items-center p-5 fixed left-0 right-0 top-[80px] bottom-0 bg-palette-chineseBlack z-10 border-t border-t-[#202020]`}
         >
           <ul className="text-white uppercase font-normal text-center text-3xl space-y-5">
-            <li className="tracking-wider">Shop</li>
-            <li className="tracking-wider">About</li>
-            <li className="tracking-wider">Contact</li>
+            <li className="tracking-wider">
+              <Link to="/">Shop</Link>
+            </li>
+
+            <li className="tracking-wider">
+              <Link to="/about">About</Link>
+            </li>
+
+            <li className="tracking-wider">
+              <Link to="/contact">Contact</Link>
+            </li>
           </ul>
         </div>
       )}

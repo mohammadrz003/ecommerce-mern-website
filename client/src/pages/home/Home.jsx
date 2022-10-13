@@ -9,6 +9,7 @@ import {
   BsFillGridFill,
   BsGrid3X3GapFill,
 } from "react-icons/bs";
+import UserProfileButton from "../../components/UserProfileButton";
 
 const viewModes = [
   {
@@ -39,10 +40,12 @@ const Home = () => {
       viewModeClasses = "grid grid-cols-2 gap-x-6 gap-y-10";
       break;
     case viewModes[1].mode:
-      viewModeClasses = "grid grid-cols-1 gap-y-5 md:grid-cols-2 md:gap-x-6 md:gap-y-8 lg:grid-cols-3";
+      viewModeClasses =
+        "grid grid-cols-1 gap-y-5 md:grid-cols-2 md:gap-x-6 md:gap-y-8 lg:grid-cols-3";
       break;
     default:
-      viewModeClasses = "grid grid-cols-2 gap-5 md:grid-cols-3 md:gap-x-6 md:gap-y-8 lg:grid-cols-4";
+      viewModeClasses =
+        "grid grid-cols-2 gap-5 md:grid-cols-3 md:gap-x-6 md:gap-y-8 lg:grid-cols-4";
       break;
   }
 
@@ -55,9 +58,8 @@ const Home = () => {
             viewModes={viewModes}
             onChangeViewMode={changeViewModeHandler}
           />
-          <div className="hidden lg:block">
-            <Cart className="p-6 text-palette-graniteGray" />
-          </div>
+          <Cart className="hidden lg:block p-6 text-palette-graniteGray" />
+          <UserProfileButton className="hidden lg:block p-6 text-palette-graniteGray" />
         </div>
       </Header>
       <main className="container mx-auto px-5 py-8 md:px-14 md:py-16">
