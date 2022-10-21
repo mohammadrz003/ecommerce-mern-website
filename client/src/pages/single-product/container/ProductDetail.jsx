@@ -8,7 +8,7 @@ import {
   AiOutlinePlus,
 } from "react-icons/ai";
 
-import { products, images, screens } from "../../../constants";
+import { images, screens } from "../../../constants";
 
 const ProductImages = styled.div`
   ${screens.lg(css`
@@ -40,9 +40,11 @@ const QuantityInput = styled.input`
   }
 `;
 
-const ProductDetail = () => {
+const ProductDetail = ({ product }) => {
   const ProductImagesContainerRef = useRef(null);
   const [productImageHeight, setProductImageHeight] = useState(0);
+  const [error, setError] = useState(null);
+  const [productQuantity, setProductQuantity] = useState(1);
 
   useEffect(() => {
     const observer = new ResizeObserver((entries) => {
@@ -54,7 +56,52 @@ const ProductDetail = () => {
       observer.unobserve(ProductImagesContainerRef.current);
   }, []);
 
-  const product = products[0];
+  const changeQuantityHandler = (amount, type) => {
+    setError(null);
+    const value = +amount;
+    if (!value) {
+      setProductQuantity(1);
+    }
+    const invalidValueHandler = () =>
+      setError({ type: "IN_STOCK", message: "Please enter a valid value." });
+    const biggerThanInStockHandler = () =>
+      setError({
+        type: "IN_STOCK",
+        message: "Amount cannot be bigger than count in stock",
+      });
+    switch (type) {
+      case "CUSTOM": {
+        if (value <= 0) {
+          invalidValueHandler();
+          break;
+        } else if (value > product.countInStock) {
+          biggerThanInStockHandler();
+          break;
+        }
+        setProductQuantity(value);
+        break;
+      }
+      case "INCREASE": {
+        if (productQuantity + value > product.countInStock) {
+          biggerThanInStockHandler();
+          break;
+        }
+        setProductQuantity((prevState) => prevState + value);
+        break;
+      }
+      case "DECREASE": {
+        if (productQuantity - value <= 0) {
+          break;
+        }
+        setProductQuantity((prevState) => prevState - value);
+        break;
+      }
+      default:
+        break;
+    }
+  };
+
+  console.log(error);
 
   return (
     <>
@@ -64,8 +111,9 @@ const ProductDetail = () => {
             className="flex overflow-auto lg:flex-col lg:col-span-2 lg:overflow-y-auto"
             productImageHeight={productImageHeight}
           >
-            {[...Array(5)].map((item) => (
+            {[...Array(5)].map((item, index) => (
               <img
+                key={index}
                 className="w-[22%] lg:w-full"
                 src={images.coat1}
                 alt={product.name}
@@ -107,17 +155,44 @@ const ProductDetail = () => {
             ${(Math.round(product.price * 100) / 100).toFixed(2)}
           </span>
           <div className="flex flex-wrap mt-7 gap-5">
-            <div className="flex items-center border border-gray-200 rounded-md overflow-hidden">
-              <button className="p-3">
-                <AiOutlineMinus />
-              </button>
-              <QuantityInput defaultValue="1" type="number" />
-              <button className="p-3">
-                <AiOutlinePlus />
-              </button>
-            </div>
-            <button className="py-3 px-6 bg-palette-chineseBlack text-white">ADD TO CART</button>
+            {product.countInStock > 0 ? (
+              <>
+                <div className="flex items-center border border-gray-200 rounded-md overflow-hidden">
+                  <button
+                    className="p-3 disabled:opacity-40 disabled:cursor-not-allowed"
+                    disabled={productQuantity === 1}
+                    onClick={() => changeQuantityHandler(1, "DECREASE")}
+                  >
+                    <AiOutlineMinus />
+                  </button>
+                  <QuantityInput
+                    value={productQuantity}
+                    onChange={(e) =>
+                      changeQuantityHandler(e.target.value, "CUSTOM")
+                    }
+                    min="1"
+                    max={product.countInStock}
+                    type="number"
+                  />
+                  <button
+                    className="p-3 disabled:opacity-40 disabled:cursor-not-allowed"
+                    disabled={productQuantity === product.countInStock}
+                    onClick={() => changeQuantityHandler(1, "INCREASE")}
+                  >
+                    <AiOutlinePlus />
+                  </button>
+                </div>
+                <button className="py-3 px-6 bg-palette-chineseBlack text-white">
+                  ADD TO CART
+                </button>
+              </>
+            ) : (
+              <p className="text-red-500 font-semibold text-xl">Out Of Stock</p>
+            )}
           </div>
+          {error && error?.type === "IN_STOCK" && (
+            <p className="text-red-500 text-xs mt-3">{error?.message}</p>
+          )}
         </div>
       </section>
     </>
