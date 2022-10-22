@@ -10,7 +10,7 @@ import ProductDetail from "./container/ProductDetail";
 
 const SingleProduct = () => {
   const { id: productId } = useParams();
-  const [product, setProduct] = useState([]);
+  const [product, setProduct] = useState({});
 
   useEffect(() => {
     (async () => {

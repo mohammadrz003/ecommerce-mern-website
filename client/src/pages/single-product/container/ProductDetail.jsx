@@ -115,8 +115,8 @@ const ProductDetail = ({ product }) => {
               <img
                 key={index}
                 className="w-[22%] lg:w-full"
-                src={images.coat1}
-                alt={product.name}
+                src="/products/coat-1.jpg"
+                alt="product"
               />
             ))}
           </ProductImages>
