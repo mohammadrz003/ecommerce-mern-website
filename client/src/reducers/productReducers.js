@@ -1,39 +1,49 @@
-import {
-  PRODUCT_LIST_REQUEST,
-  PRODUCT_LIST_SUCCESS,
-  PRODUCT_LIST_FAIL,
-  PRODUCT_DETAIL_REQUEST,
-  PRODUCT_DETAIL_SUCCESS,
-  PRODUCT_DETAIL_FAIL,
-} from "../constants/productConstant";
+import { createSlice } from "@reduxjs/toolkit";
 
-const productListReducers = (state = { products: [] }, action) => {
-  switch (action.type) {
-    case PRODUCT_LIST_REQUEST:
+// PRODUCT LIST SLICE
+const productListInitialState = { products: [] };
+
+const productListSlice = createSlice({
+  name: "productList",
+  initialState: productListInitialState,
+  reducers: {
+    productListRequest() {
       return { loading: true, products: [] };
-    case PRODUCT_LIST_SUCCESS:
+    },
+    productListSuccess(state, action) {
       return { loading: false, products: action.payload };
-    case PRODUCT_LIST_FAIL:
+    },
+    productListFail(state, action) {
       return { loading: false, error: action.payload };
-    default:
-      return state;
-  }
+    },
+  },
+});
+
+export const productListActions = productListSlice.actions;
+const productListReducer = productListSlice.reducer;
+
+// PRODUCT DETAIL SLICE
+const productDetailInitialState = {
+  product: { reviews: [] },
 };
 
-const productDetailsReducers = (
-  state = { product: { reviews: [] } },
-  action
-) => {
-  switch (action.type) {
-    case PRODUCT_DETAIL_REQUEST:
+const productDetailsSlice = createSlice({
+  name: "productDetail",
+  initialState: productDetailInitialState,
+  reducers: {
+    productDetailRequest(state) {
       return { loading: true, ...state };
-    case PRODUCT_DETAIL_SUCCESS:
+    },
+    productDetailSuccess(state, action) {
       return { loading: false, product: action.payload };
-    case PRODUCT_DETAIL_FAIL:
+    },
+    productDetailFail(state, action) {
       return { loading: false, error: action.payload };
-    default:
-      return state;
-  }
-};
+    },
+  },
+});
 
-export { productListReducers, productDetailsReducers };
+export const productDetailActions = productDetailsSlice.actions;
+const productDetailReducer = productDetailsSlice.reducer;
+
+export { productListReducer, productDetailReducer };
