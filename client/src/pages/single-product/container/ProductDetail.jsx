@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
+import { useNavigate } from "react-router-dom";
 import Rating from "react-rating";
 import {
   AiFillStar,
@@ -8,7 +9,7 @@ import {
   AiOutlinePlus,
 } from "react-icons/ai";
 
-import { images, screens } from "../../../constants";
+import { screens } from "../../../constants";
 
 const ProductImages = styled.div`
   ${screens.lg(css`
@@ -41,6 +42,7 @@ const QuantityInput = styled.input`
 `;
 
 const ProductDetail = ({ product }) => {
+  const navigate = useNavigate();
   const ProductImagesContainerRef = useRef(null);
   const [productImageHeight, setProductImageHeight] = useState(0);
   const [error, setError] = useState(null);
@@ -101,7 +103,9 @@ const ProductDetail = ({ product }) => {
     }
   };
 
-  console.log(error);
+  const addToCartHandler = () => {
+    navigate(`/cart/${product._id}?qty=${productQuantity}`)
+  };
 
   return (
     <>
@@ -182,7 +186,10 @@ const ProductDetail = ({ product }) => {
                     <AiOutlinePlus />
                   </button>
                 </div>
-                <button className="py-3 px-6 bg-palette-chineseBlack text-white">
+                <button
+                  onClick={addToCartHandler}
+                  className="py-3 px-6 bg-palette-chineseBlack text-white"
+                >
                   ADD TO CART
                 </button>
               </>

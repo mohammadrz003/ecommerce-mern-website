@@ -1,24 +1,53 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import ProductItem from "./ProductItem";
+import { listProducts } from "../../../actions/productActions";
 
 const ProductList = (props) => {
-  const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+  const productList = useSelector((state) => state.productList);
+  const { loading, error, products } = productList;
 
   useEffect(() => {
-    (async () => {
-      const { data } = await axios.get("/api/products");
-      setProducts(data);
-    })();
-  }, []);
+    dispatch(listProducts());
+  }, [dispatch]);
 
   return (
-    <ul className={`${props.viewModeClasses}`}>
-      {products.map((item) => (
-        <ProductItem key={item.id} product={item} />
-      ))}
-    </ul>
+    <>
+      {loading ? (
+        <div className="flex">
+          <button className="mx-auto btn loading bg-transparent text-gray-700 border-none">
+            Loading...
+          </button>
+        </div>
+      ) : error ? (
+        <div className="alert alert-error shadow-lg">
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="stroke-current flex-shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>{error}</span>
+          </div>
+        </div>
+      ) : (
+        <ul className={`${props.viewModeClasses}`}>
+          {products.map((item) => (
+            <ProductItem key={item._id} product={item} />
+          ))}
+        </ul>
+      )}
+    </>
   );
 };
 

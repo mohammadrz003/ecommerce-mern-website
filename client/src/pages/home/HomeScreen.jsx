@@ -26,7 +26,7 @@ const viewModes = [
   },
 ];
 
-const Home = () => {
+const HomeScreen = () => {
   const [viewMode, setViewMode] = useState(viewModes[2].mode);
 
   const changeViewModeHandler = (viewModeValue) => {
@@ -69,4 +69,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomeScreen;

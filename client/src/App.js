@@ -1,15 +1,20 @@
 import { Routes, Route } from "react-router-dom";
 
 import "./App.css";
-import Home from "./pages/home/Home";
-import SingleProduct from "./pages/single-product/SingleProduct";
+import HomeScreen from "./pages/home/HomeScreen";
+import SingleProductScreen from "./pages/single-product/SingleProductScreen";
+import CartScreen from "./pages/cart/CartScreen";
 
 function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/product/:id" element={<SingleProduct />} />
+        <Route path="/" element={<HomeScreen />} />
+        <Route path="/product/:id" element={<SingleProductScreen />} />
+        <Route path="/cart">
+          <Route index element={<CartScreen />} />
+          <Route path=":id" element={<CartScreen />} />
+        </Route>
       </Routes>
     </div>
   );
