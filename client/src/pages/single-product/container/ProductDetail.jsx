@@ -2,14 +2,10 @@ import React, { useRef, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Rating from "react-rating";
-import {
-  AiFillStar,
-  AiOutlineStar,
-  AiOutlineMinus,
-  AiOutlinePlus,
-} from "react-icons/ai";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 
 import { screens } from "../../../constants";
+import QuantityInput from "../../../components/cart/QuantityInput";
 
 const ProductImages = styled.div`
   ${screens.lg(css`
@@ -23,22 +19,6 @@ const ProductSingleImage = styled.div`
   ${screens.lg(css`
     grid-row: auto;
   `)};
-`;
-
-const QuantityInput = styled.input`
-  width: 100%;
-  max-width: 2rem;
-  font-size: 1.4rem;
-  text-align: center;
-  border: none;
-  outline: none;
-
-  &::-webkit-inner-spin-button,
-  &::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-  }
 `;
 
 const ProductDetail = ({ product }) => {
@@ -58,53 +38,8 @@ const ProductDetail = ({ product }) => {
       observer.unobserve(ProductImagesContainerRef.current);
   }, []);
 
-  const changeQuantityHandler = (amount, type) => {
-    setError(null);
-    const value = +amount;
-    if (!value) {
-      setProductQuantity(1);
-    }
-    const invalidValueHandler = () =>
-      setError({ type: "IN_STOCK", message: "Please enter a valid value." });
-    const biggerThanInStockHandler = () =>
-      setError({
-        type: "IN_STOCK",
-        message: "Amount cannot be bigger than count in stock",
-      });
-    switch (type) {
-      case "CUSTOM": {
-        if (value <= 0) {
-          invalidValueHandler();
-          break;
-        } else if (value > product.countInStock) {
-          biggerThanInStockHandler();
-          break;
-        }
-        setProductQuantity(value);
-        break;
-      }
-      case "INCREASE": {
-        if (productQuantity + value > product.countInStock) {
-          biggerThanInStockHandler();
-          break;
-        }
-        setProductQuantity((prevState) => prevState + value);
-        break;
-      }
-      case "DECREASE": {
-        if (productQuantity - value <= 0) {
-          break;
-        }
-        setProductQuantity((prevState) => prevState - value);
-        break;
-      }
-      default:
-        break;
-    }
-  };
-
   const addToCartHandler = () => {
-    navigate(`/cart/${product._id}?qty=${productQuantity}`)
+    navigate(`/cart/${product._id}?qty=${productQuantity}`);
   };
 
   return (
@@ -161,31 +96,13 @@ const ProductDetail = ({ product }) => {
           <div className="flex flex-wrap mt-7 gap-5">
             {product.countInStock > 0 ? (
               <>
-                <div className="flex items-center border border-gray-200 rounded-md overflow-hidden">
-                  <button
-                    className="p-3 disabled:opacity-40 disabled:cursor-not-allowed"
-                    disabled={productQuantity === 1}
-                    onClick={() => changeQuantityHandler(1, "DECREASE")}
-                  >
-                    <AiOutlineMinus />
-                  </button>
-                  <QuantityInput
-                    value={productQuantity}
-                    onChange={(e) =>
-                      changeQuantityHandler(e.target.value, "CUSTOM")
-                    }
-                    min="1"
-                    max={product.countInStock}
-                    type="number"
-                  />
-                  <button
-                    className="p-3 disabled:opacity-40 disabled:cursor-not-allowed"
-                    disabled={productQuantity === product.countInStock}
-                    onClick={() => changeQuantityHandler(1, "INCREASE")}
-                  >
-                    <AiOutlinePlus />
-                  </button>
-                </div>
+                <QuantityInput
+                className="text-[1.4rem]"
+                  productQuantity={productQuantity}
+                  countInStock={product.countInStock}
+                  setErrorFn={setError}
+                  setProductQuantityFn={setProductQuantity}
+                />
                 <button
                   onClick={addToCartHandler}
                   className="py-3 px-6 bg-palette-chineseBlack text-white"
