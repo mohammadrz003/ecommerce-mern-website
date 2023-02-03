@@ -31,19 +31,19 @@ const productDetailsSlice = createSlice({
   name: "productDetail",
   initialState: productDetailInitialState,
   reducers: {
-    productDetailRequest(state) {
+    productDetailsRequest(state) {
       return { loading: true, ...state };
     },
-    productDetailSuccess(state, action) {
+    productDetailsSuccess(state, action) {
       return { loading: false, product: action.payload };
     },
-    productDetailFail(state, action) {
+    productDetailsFail(state, action) {
       return { loading: false, error: action.payload };
     },
   },
 });
 
-export const productDetailActions = productDetailsSlice.actions;
+export const productDetailsActions = productDetailsSlice.actions;
 const productDetailReducer = productDetailsSlice.reducer;
 
 export { productListReducer, productDetailReducer };

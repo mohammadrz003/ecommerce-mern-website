@@ -2,7 +2,7 @@ import axios from "axios";
 
 import {
   productListActions,
-  productDetailActions,
+  productDetailsActions,
 } from "../reducers/productReducers";
 
 export const listProducts = () => async (dispatch) => {
@@ -25,14 +25,14 @@ export const listProducts = () => async (dispatch) => {
 
 export const listProductDetails = (id) => async (dispatch) => {
   try {
-    dispatch(productDetailActions.productDetailRequest());
+    dispatch(productDetailsActions.productDetailsRequest());
 
     const { data } = await axios.get(`/api/products/${id}`);
 
-    dispatch(productDetailActions.productDetailSuccess(data));
+    dispatch(productDetailsActions.productDetailsSuccess(data));
   } catch (error) {
     dispatch(
-      productDetailActions.productDetailFail(
+      productDetailsActions.productDetailsFail(
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message

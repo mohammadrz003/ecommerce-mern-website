@@ -1,11 +1,15 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 import CartProductItem from "./CartProductItem";
 
 const CartProductList = () => {
+  const cart = useSelector((state) => state.cart);
+  const { cartItems } = cart;
+
   return (
-    <div className="overflow-x-auto">
-      <table className="table table-compact w-full">
+    <div className="overflow-x-auto flex-1">
+      <table className="table table-compact w-full z-0">
         <thead>
           <tr>
             <th className="text-center">PRODUCT</th>
@@ -15,8 +19,8 @@ const CartProductList = () => {
           </tr>
         </thead>
         <tbody>
-          {[...Array(3)].map((item) => (
-            <CartProductItem />
+          {cartItems.map((item) => (
+            <CartProductItem key={item.product} item={item} />
           ))}
         </tbody>
       </table>

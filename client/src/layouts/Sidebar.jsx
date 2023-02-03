@@ -7,7 +7,6 @@ import {
   AiOutlineInstagram,
   AiOutlineClose,
 } from "react-icons/ai";
-import { FaRegUserCircle } from "react-icons/fa";
 
 import Cart from "../components/cart/Cart";
 import { images } from "../constants";
@@ -32,7 +31,7 @@ const Sidebar = () => {
     <>
       <div
         ref={sideBarRef}
-        className="sticky top-0 z-10 bg-palette-chineseBlack text-white lg:h-screen overflow-y-auto"
+        className="sticky top-0 z-30 bg-palette-chineseBlack text-white lg:h-screen overflow-y-auto"
       >
         <div className="flex flex-row lg:flex-col justify-between items-center w-full h-full p-5">
           <div className="flex items-center space-x-4 lg:space-x-0">
@@ -92,14 +91,14 @@ const Sidebar = () => {
       </div>
       {menuIsShown && (
         <div
-          className="hidden lg:block absolute bg-white opacity-60 top-0 bottom-0 right-0 z-[9]"
+          className="hidden lg:block z-[49] absolute bg-white opacity-60 top-0 bottom-0 right-0"
           style={{ left: `${sideBarWidth}px` }}
           onClick={toggleMenuHandler}
         />
       )}
       {menuIsShown && (
         <div
-          className={`hidden lg:flex items-center px-20 py-10 absolute top-0 bottom-0 w-1/3 h-full bg-palette-chineseBlack z-10 border-l border-l-[#202020]`}
+          className={`hidden z-50 lg:flex items-center px-20 py-10 absolute top-0 bottom-0 w-1/3 h-full bg-palette-chineseBlack border-l border-l-[#202020]`}
           style={{ left: `${sideBarWidth}px` }}
         >
           <ul className="text-white uppercase font-normal text-4xl space-y-5">
@@ -119,7 +118,7 @@ const Sidebar = () => {
       )}
       {menuIsShown && (
         <div
-          className={`flex lg:hidden justify-center items-center p-5 fixed left-0 right-0 top-[80px] bottom-0 bg-palette-chineseBlack z-10 border-t border-t-[#202020]`}
+          className={`flex lg:hidden justify-center items-center p-5 fixed left-0 right-0 top-[80px] bottom-0 bg-palette-chineseBlack z-[21] border-t border-t-[#202020]`}
         >
           <ul className="text-white uppercase font-normal text-center text-3xl space-y-5">
             <li className="tracking-wider">

@@ -12,8 +12,8 @@ import { listProductDetails } from "../../actions/productActions";
 const SingleProductScreen = () => {
   const { id: productId } = useParams();
   const dispatch = useDispatch();
-  const productDetail = useSelector((state) => state.productDetail);
-  const { loading, error, product } = productDetail;
+  const productDetails = useSelector((state) => state.productDetails);
+  const { loading, error, product } = productDetails;
 
   useEffect(() => {
     dispatch(listProductDetails(productId));

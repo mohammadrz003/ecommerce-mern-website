@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Rating from "react-rating";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 
@@ -23,6 +23,7 @@ const ProductSingleImage = styled.div`
 
 const ProductDetail = ({ product }) => {
   const navigate = useNavigate();
+  const { id: productId } = useParams();
   const ProductImagesContainerRef = useRef(null);
   const [productImageHeight, setProductImageHeight] = useState(0);
   const [error, setError] = useState(null);
@@ -39,7 +40,7 @@ const ProductDetail = ({ product }) => {
   }, []);
 
   const addToCartHandler = () => {
-    navigate(`/cart/${product._id}?qty=${productQuantity}`);
+    navigate(`/cart/${productId}?qty=${productQuantity}`);
   };
 
   return (
@@ -97,7 +98,7 @@ const ProductDetail = ({ product }) => {
             {product.countInStock > 0 ? (
               <>
                 <QuantityInput
-                className="text-[1.4rem]"
+                  className="text-[1.4rem]"
                   productQuantity={productQuantity}
                   countInStock={product.countInStock}
                   setErrorFn={setError}
