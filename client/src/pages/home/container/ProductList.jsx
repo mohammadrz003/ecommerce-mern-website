@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import ProductItem from "./ProductItem";
 import { listProducts } from "../../../actions/productActions";
+import Loader from "../../../components/Loader";
 
 const ProductList = (props) => {
   const dispatch = useDispatch();
@@ -16,11 +17,7 @@ const ProductList = (props) => {
   return (
     <>
       {loading ? (
-        <div className="flex">
-          <button className="mx-auto btn loading bg-transparent text-gray-700 border-none">
-            Loading...
-          </button>
-        </div>
+        <Loader />
       ) : error ? (
         <div className="alert alert-error shadow-lg">
           <div>

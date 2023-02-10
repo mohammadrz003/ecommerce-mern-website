@@ -6,7 +6,7 @@ import {
   AiOutlineCloseCircle,
 } from "react-icons/ai";
 
-const Alert = ({ variant, className, children }) => {
+const Alert = ({ variant, className = "", children }) => {
   let alertVariantClass = "";
   let alertVariantIcon;
 
