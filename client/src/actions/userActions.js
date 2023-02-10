@@ -23,11 +23,16 @@ export const login = (email, password) => async (dispatch) => {
     localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
     dispatch(
-        userLoginActions.userLoginFail(
-          error.response && error.response.data.message
-            ? error.response.data.message
-            : error.message
-        )
-      );
+      userLoginActions.userLoginFail(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      )
+    );
   }
+};
+
+export const logout = () => (dispatch) => {
+  localStorage.removeItem("userInfo");
+  dispatch(userLoginActions.userLogout());
 };
