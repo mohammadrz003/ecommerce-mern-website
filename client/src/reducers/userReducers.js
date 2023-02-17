@@ -22,7 +22,33 @@ const userLoginSlice = createSlice({
   },
 });
 
-export const userLoginActions = userLoginSlice.actions;
-const userLoginReducer = userLoginSlice.reducer;
+// USER REGISTER SLICE
+const userRegisterInitialState = {};
 
-export { userLoginReducer };
+const userRegisterSlice = createSlice({
+  name: "userRegister",
+  initialState: userRegisterInitialState,
+  reducers: {
+    userRegisterRequest(state, action) {
+      return { loading: true };
+    },
+    userRegisterSuccess(state, action) {
+      return { loading: false, userInfo: action.payload };
+    },
+    userRegisterFail(state, action) {
+      return { loading: false, error: action.payload };
+    },
+  },
+});
+
+const userLoginActions = userLoginSlice.actions;
+const userLoginReducer = userLoginSlice.reducer;
+const userRegisterActions = userRegisterSlice.actions;
+const userRegisterReducer = userRegisterSlice.reducer;
+
+export {
+  userLoginActions,
+  userLoginReducer,
+  userRegisterActions,
+  userRegisterReducer,
+};

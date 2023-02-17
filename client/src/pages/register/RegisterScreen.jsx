@@ -4,21 +4,26 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Alert from "../../components/Alert";
 import FormContainer from "../../components/FormContainer";
-import { login } from "../../actions/userActions";
+import { register } from "../../actions/userActions";
 import Layout from "../../layouts/Layout";
 import Header from "../../layouts/Header";
 import Cart from "../../components/cart/Cart";
 import UserProfileButton from "../../components/UserProfileButton";
 
-const LoginScreen = () => {
+const RegisterScreen = () => {
   const [inputValues, setInputValues] = useState({
+    name: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
+  const [message, setMessage] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userRegister = useSelector((state) => state.userRegister);
+  const { loading, error, userInfo } = userRegister;
   const userLogin = useSelector((state) => state.userLogin);
-  const { loading, error, userInfo } = userLogin;
+  const { userInfo: userLoginInfo } = userLogin;
   const [searchParams] = useSearchParams();
 
   const redirect = searchParams.get("redirect")
@@ -26,10 +31,10 @@ const LoginScreen = () => {
     : "/";
 
   useEffect(() => {
-    if (userInfo) {
+    if (userLoginInfo) {
       navigate(redirect);
     }
-  }, [navigate, redirect, userInfo]);
+  }, [navigate, redirect, userLoginInfo]);
 
   const inputChangeHandler = (e) => {
     const { value, name } = e.target;
@@ -40,7 +45,14 @@ const LoginScreen = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(login(inputValues.email, inputValues.password));
+    if (inputValues.password !== inputValues.confirmPassword) {
+      setMessage("Passwords do not match");
+    } else {
+      setMessage(null);
+      dispatch(
+        register(inputValues.name, inputValues.email, inputValues.password)
+      );
+    }
   };
 
   return (
@@ -52,9 +64,26 @@ const LoginScreen = () => {
         </div>
       </Header>
       <FormContainer className="py-10 px-5">
-        <h1 className="text-3xl mb-6">Sign In</h1>
-        {error && <Alert variant="error">{error}</Alert>}
+        <h1 className="text-3xl mb-6">Sign Up</h1>
+        <div className="space-y-2">
+          {message && <Alert variant="error">{message}</Alert>}
+          {error && <Alert variant="error">{error}</Alert>}
+        </div>
         <form onSubmit={submitHandler}>
+          <div className="form-control">
+            <label className="label" htmlFor="name">
+              <span className="label-text">Name</span>
+            </label>
+            <input
+              className="input input-bordered"
+              id="name"
+              type="text"
+              placeholder="Enter your name"
+              value={inputValues.name}
+              name="name"
+              onChange={inputChangeHandler}
+            />
+          </div>
           <div className="form-control">
             <label className="label" htmlFor="email">
               <span className="label-text">Email Address</span>
@@ -83,18 +112,32 @@ const LoginScreen = () => {
               onChange={inputChangeHandler}
             />
           </div>
+          <div className="form-control">
+            <label className="label" htmlFor="confirmPassword">
+              <span className="label-text">Confirm Password</span>
+            </label>
+            <input
+              className="input input-bordered"
+              id="confirmPassword"
+              type="password"
+              placeholder="Enter Confirm password"
+              value={inputValues.confirmPassword}
+              name="confirmPassword"
+              onChange={inputChangeHandler}
+            />
+          </div>
           <button type="submit" disabled={loading} className="btn w-full mt-5">
-            {loading ? "Loading..." : "Sign In"}
+            {loading ? "Loading..." : "Register"}
           </button>
         </form>
         <div className="py-3">
           <div>
-            New Customer?{" "}
+            Have an Account?{" "}
             <Link
-              to={redirect ? `/register?redirect=${redirect}` : "/register"}
+              to={redirect ? `/login?redirect=${redirect}` : "/login"}
               className="link"
             >
-              Register
+              Login
             </Link>
           </div>
         </div>
@@ -103,4 +146,4 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;
