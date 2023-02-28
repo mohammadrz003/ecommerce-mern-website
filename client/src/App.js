@@ -7,6 +7,7 @@ import CartScreen from "./pages/cart/CartScreen";
 import LoginScreen from "./pages/login/LoginScreen";
 import RegisterScreen from "./pages/register/RegisterScreen";
 import ProfileScreen from "./pages/profile/ProfileScreen";
+import ShippingScreen from "./pages/shipping/ShippingScreen";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route index element={<CartScreen />} />
           <Route path=":id" element={<CartScreen />} />
         </Route>
+        <Route path="/shipping" element={<ShippingScreen />} />
       </Routes>
     </div>
   );

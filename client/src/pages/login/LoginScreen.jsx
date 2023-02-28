@@ -22,7 +22,7 @@ const LoginScreen = () => {
   const [searchParams] = useSearchParams();
 
   const redirect = searchParams.get("redirect")
-    ? searchParams.get("redirect")
+    ? "/" + searchParams.get("redirect")
     : "/";
 
   useEffect(() => {

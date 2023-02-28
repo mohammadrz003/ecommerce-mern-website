@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, redirect, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import Alert from "../../components/Alert";

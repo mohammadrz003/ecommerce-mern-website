@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import Alert from "../../components/Alert";
-import { getUserDetails } from "../../actions/userActions";
+import { getUserDetails, updateUserProfile } from "../../actions/userActions";
 import Layout from "../../layouts/Layout";
 import Header from "../../layouts/Header";
 import Cart from "../../components/cart/Cart";
@@ -23,7 +23,8 @@ const ProfileScreen = () => {
   const { loading, error, user } = userDetails;
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo: userLoginInfo } = userLogin;
-  const [searchParams] = useSearchParams();
+  const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
+  const { success } = userUpdateProfile;
 
   useEffect(() => {
     if (!userLoginInfo) {
@@ -52,7 +53,14 @@ const ProfileScreen = () => {
       setMessage("Passwords do not match");
     } else {
       setMessage(null);
-      // DISPATCH UPDATE PROFILE
+      dispatch(
+        updateUserProfile({
+          id: user._id,
+          name: inputValues.name,
+          email: inputValues.email,
+          password: inputValues.password,
+        })
+      );
     }
   };
 
@@ -64,12 +72,13 @@ const ProfileScreen = () => {
           <UserProfileButton className="hidden lg:block p-6 text-palette-graniteGray" />
         </div>
       </Header>
-      <section>
-        <div>
+      <section className="flex flex-col p-5 lg:flex-row">
+        <div className="w-full lg:w-3/12">
           <h2 className="text-3xl mb-6">User Profile</h2>
-          <div className="space-y-2">
+          <div className="flex flex-col space-y-2">
             {message && <Alert variant="error">{message}</Alert>}
             {error && <Alert variant="error">{error}</Alert>}
+            {success && <Alert variant="success">Profile Updated</Alert>}
           </div>
           <form onSubmit={submitHandler}>
             <div className="form-control">
