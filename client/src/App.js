@@ -8,6 +8,8 @@ import LoginScreen from "./pages/login/LoginScreen";
 import RegisterScreen from "./pages/register/RegisterScreen";
 import ProfileScreen from "./pages/profile/ProfileScreen";
 import ShippingScreen from "./pages/shipping/ShippingScreen";
+import PaymentScreen from "./pages/payment/PaymentScreen";
+import PlaceOrderScreen from "./pages/placeorder/PlaceOrderScreen";
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
           <Route path=":id" element={<CartScreen />} />
         </Route>
         <Route path="/shipping" element={<ShippingScreen />} />
+        <Route path="/payment" element={<PaymentScreen />} />
+        <Route path="/placeorder" element={<PlaceOrderScreen />} />
       </Routes>
     </div>
   );
