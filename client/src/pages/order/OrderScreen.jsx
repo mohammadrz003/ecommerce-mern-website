@@ -35,11 +35,10 @@ const OrderScreen = () => {
   };
 
   const payOrderHandler = async () => {
-    const { data } = await axios.get(
-      `https://plisio.net/api/v1/invoices/new?source_currency=USD&source_amount=${
-        order.totalPrice
-      }&order_name=techshop&order_number=${Math.random()}&api_key=L2bInjPtCfrkhWZHsxCRS4irhaU8qtY7yuN8aDwzbFunJKs1iVS-_BFkCaRfmKig`
-    );
+    const { data } = await axios.post("/api/createInvoice", {
+      totalPrice: 0.05,
+    });
+    console.log(data);
     window.location.replace(data.data.invoice_url);
   };
 

@@ -7,7 +7,7 @@ import "./index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 
-axios.defaults.baseURL = "http://localhost:5000";
+axios.defaults.baseURL = "https://techshop.iran.liara.run";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

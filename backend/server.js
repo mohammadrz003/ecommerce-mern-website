@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import axios from "axios";
 import colors from "colors";
 
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
@@ -28,6 +29,17 @@ app.get("/", (req, res) => {
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
+
+app.post("/api/createInvoice", async (req, res) => {
+  const { totalPrice } = req.body;
+  const { data } = await axios.get(
+    `https://plisio.net/api/v1/invoices/new?source_currency=USD&source_amount=${totalPrice}&order_name=techshop&order_number=${Math.random()}&api_key=L2bInjPtCfrkhWZHsxCRS4irhaU8qtY7yuN8aDwzbFunJKs1iVS-_BFkCaRfmKig`
+  );
+  res.json(data);
+});
+app.post("/api/payCallback", (req, res) => {
+  res.json(req.body);
+});
 
 // Error handling
 app.use(notFound);
