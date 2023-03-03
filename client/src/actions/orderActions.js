@@ -1,6 +1,10 @@
 import axios from "axios";
 
-import { orderCreateActions, orderDetailsActions } from "../reducers/orderReducers";
+import {
+  orderCreateActions,
+  orderDetailsActions,
+  orderPayActions,
+} from "../reducers/orderReducers";
 
 export const createOrder = (order) => async (dispatch, getState) => {
   try {
@@ -58,3 +62,37 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
     );
   }
 };
+
+export const payOrder =
+  (orderId, paymentResult) => async (dispatch, getState) => {
+    try {
+      dispatch(orderPayActions.orderPayRequest());
+
+      const {
+        userLogin: { userInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.put(
+        `/api/orders/${orderId}/pay`,
+        paymentResult,
+        config
+      );
+
+      dispatch(orderPayActions.orderPaySuccess(data));
+    } catch (error) {
+      dispatch(
+        orderPayActions.orderPayFail(
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message
+        )
+      );
+    }
+  };

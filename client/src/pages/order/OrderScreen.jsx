@@ -9,6 +9,8 @@ import Header from "../../layouts/Header";
 import Cart from "../../components/cart/Cart";
 import UserProfileButton from "../../components/UserProfileButton";
 import { getOrderDetails } from "../../actions/orderActions";
+import { orderPayActions } from "../../reducers/orderReducers";
+import axios from "axios";
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
@@ -18,14 +20,27 @@ const OrderScreen = () => {
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
 
+  const orderPay = useSelector((state) => state.orderPay);
+  const { loading: loadingPay, success: successPay } = orderPay;
+
   useEffect(() => {
-    if (!order || order._id !== orderId) {
+    if (!order || successPay) {
+      dispatch(orderPayActions.orderPayRest());
       dispatch(getOrderDetails(orderId));
     }
-  }, [dispatch, orderId, order]);
+  }, [dispatch, order, orderId, successPay]);
 
   const addDecimals = (num) => {
     return (Math.round(num * 100) / 100).toFixed(2);
+  };
+
+  const payOrderHandler = async () => {
+    const { data } = await axios.get(
+      `https://plisio.net/api/v1/invoices/new?source_currency=USD&source_amount=${
+        order.totalPrice
+      }&order_name=techshop&order_number=${Math.random()}&api_key=L2bInjPtCfrkhWZHsxCRS4irhaU8qtY7yuN8aDwzbFunJKs1iVS-_BFkCaRfmKig`
+    );
+    window.location.replace(data.data.invoice_url);
   };
 
   return (
@@ -61,7 +76,9 @@ const OrderScreen = () => {
                   {order.shippingAddress.country}
                 </p>
                 {order.isDelivered ? (
-                  <Alert variant="success">Delivered on {order.deliveredAt}</Alert>
+                  <Alert variant="success">
+                    Delivered on {order.deliveredAt}
+                  </Alert>
                 ) : (
                   <Alert variant="error">Not Delivered</Alert>
                 )}
@@ -158,6 +175,7 @@ const OrderScreen = () => {
               <button
                 className="w-full text-white bg-black px-5 py-3 mt-4"
                 disabled={order.orderItems.length === 0}
+                onClick={payOrderHandler}
               >
                 Pay
               </button>

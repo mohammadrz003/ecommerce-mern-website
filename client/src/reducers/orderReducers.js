@@ -42,14 +42,40 @@ const orderDetailsSlice = createSlice({
   },
 });
 
+// ORDER PAY SLICE
+const orderPayInitialState = {};
+
+const orderPaySlice = createSlice({
+  name: "orderPay",
+  initialState: orderPayInitialState,
+  reducers: {
+    orderPayRequest(state, action) {
+      return { loading: true };
+    },
+    orderPaySuccess(state, action) {
+      return { loading: false, success: true };
+    },
+    orderPayFail(state, action) {
+      return { loading: false, error: action.payload };
+    },
+    orderPayRest(state, action) {
+      return {};
+    },
+  },
+});
+
 const orderCreateActions = orderCreateSlice.actions;
 const orderCreateReducer = orderCreateSlice.reducer;
 const orderDetailsActions = orderDetailsSlice.actions;
 const orderDetailsReducer = orderDetailsSlice.reducer;
+const orderPayActions = orderPaySlice.actions;
+const orderPayReducer = orderPaySlice.reducer;
 
 export {
   orderCreateActions,
   orderCreateReducer,
   orderDetailsActions,
   orderDetailsReducer,
+  orderPayActions,
+  orderPayReducer,
 };
