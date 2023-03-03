@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// USER LOGIN SLICE
+// ORDER CREATE SLICE
 const orderCreateInitialState = {};
 
 const orderCreateSlice = createSlice({
@@ -19,7 +19,37 @@ const orderCreateSlice = createSlice({
   },
 });
 
+// ORDER DETAILS SLICE
+const orderDetailsInitialState = {
+  loading: true,
+  orderItems: [],
+  shippingAddress: {},
+};
+
+const orderDetailsSlice = createSlice({
+  name: "orderDetails",
+  initialState: orderDetailsInitialState,
+  reducers: {
+    orderDetailsRequest(state, action) {
+      return { ...state, loading: true };
+    },
+    orderDetailsSuccess(state, action) {
+      return { loading: false, order: action.payload };
+    },
+    orderDetailsFail(state, action) {
+      return { loading: false, error: action.payload };
+    },
+  },
+});
+
 const orderCreateActions = orderCreateSlice.actions;
 const orderCreateReducer = orderCreateSlice.reducer;
+const orderDetailsActions = orderDetailsSlice.actions;
+const orderDetailsReducer = orderDetailsSlice.reducer;
 
-export { orderCreateActions, orderCreateReducer };
+export {
+  orderCreateActions,
+  orderCreateReducer,
+  orderDetailsActions,
+  orderDetailsReducer,
+};
