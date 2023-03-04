@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import axios from "axios";
 import colors from "colors";
 import crypto from "crypto";
+import asyncHandler from "express-async-handler";
 
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import connectDB from "./config/db.js";
@@ -23,8 +24,7 @@ app.use(
   })
 );
 
-const secretKey =
-  "L2bInjPtCfrkhWZHsxCRS4irhaU8qtY7yuN8aDwzbFunJKs1iVS-_BFkCaRfmKig";
+const secretKey = process.env.PLISIO_SECRET_KEY;
 
 app.get("/", (req, res) => {
   res.send("server is running...");
@@ -35,9 +35,9 @@ app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
 
 app.post("/api/createInvoice", async (req, res) => {
-  const { totalPrice } = req.body;
+  const { totalPrice, orderId } = req.body;
   const { data } = await axios.get(
-    `https://plisio.net/api/v1/invoices/new?source_currency=USD&source_amount=${totalPrice}&order_name=techshop&order_number=${Math.random()}&api_key=L2bInjPtCfrkhWZHsxCRS4irhaU8qtY7yuN8aDwzbFunJKs1iVS-_BFkCaRfmKig&json=true&callback_url=https://techshop.iran.liara.run/api/payCallback?json=true&success_callback_url=https://techshop.iran.liara.run/api/payCallback?json=true`
+    `https://plisio.net/api/v1/invoices/new?source_currency=USD&source_amount=${totalPrice}&order_name=techshop&order_number=${orderId}&api_key=L2bInjPtCfrkhWZHsxCRS4irhaU8qtY7yuN8aDwzbFunJKs1iVS-_BFkCaRfmKig&json=true&callback_url=https://techshop.iran.liara.run/api/payCallback?json=true&success_callback_url=https://techshop.iran.liara.run/api/payCallback?json=true`
   );
   res.json(data);
 });
@@ -56,33 +56,29 @@ const vallidateRequest = function (data) {
   return false;
 };
 
-app.post("/api/payCallback", (req, res) => {
-  console.log("Hello");
-  console.log("req.body", req.body);
-  let chunks = "";
-  req.on("data", (chunk) => (chunks += chunk));
-  req.on("end", () => {
-    let data;
+app.post(
+  "/api/payCallback",
+  asyncHandler((req, res) => {
+    console.log(req.body);
+    let data = "";
     try {
-      data = JSON.parse(chunks);
-      console.log("data:", data);
-      res.setHeader("Content-Type", "application/json");
+      data = req.body;
     } catch (e) {
       // console.error(e);
       data = false;
     }
 
     if (data && vallidateRequest(data)) {
-      res.writeHead(200);
+      res.status(200);
       console.log("This is a correct JSON callback");
-      res.end("This is a correct JSON callback");
+      res.send("This is a correct JSON callback");
     } else {
-      res.writeHead(422);
+      res.status(422);
       console.log("Incorrect data 1");
-      res.end("Incorrect data 1");
+      throw new Error("Incorrect data 1");
     }
-  });
-});
+  })
+);
 
 // Error handling
 app.use(notFound);

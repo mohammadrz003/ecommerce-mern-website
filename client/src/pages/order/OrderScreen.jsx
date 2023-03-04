@@ -37,6 +37,7 @@ const OrderScreen = () => {
   const payOrderHandler = async () => {
     const { data } = await axios.post("/api/createInvoice", {
       totalPrice: 0.05,
+      orderId,
     });
     console.log(data);
     window.location.replace(data.data.invoice_url);
