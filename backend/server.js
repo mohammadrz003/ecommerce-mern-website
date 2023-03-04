@@ -12,6 +12,7 @@ import connectDB from "./config/db.js";
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import Order from "./models/orderModel.js";
 
 dotenv.config();
 connectDB();
@@ -43,7 +44,6 @@ app.post("/api/createInvoice", async (req, res) => {
 });
 
 const vallidateRequest = function (data) {
-  console.log("validate request");
   if (typeof data === "object" && data.verify_hash && secretKey) {
     const ordered = { ...data };
     delete ordered.verify_hash;
@@ -58,8 +58,7 @@ const vallidateRequest = function (data) {
 
 app.post(
   "/api/payCallback",
-  asyncHandler((req, res) => {
-    console.log(req.body);
+  asyncHandler(async (req, res) => {
     let data = "";
     try {
       data = req.body;
@@ -69,12 +68,29 @@ app.post(
     }
 
     if (data && vallidateRequest(data)) {
-      res.status(200);
-      console.log("This is a correct JSON callback");
-      res.send("This is a correct JSON callback");
+      if (data.status === "completed") {
+        let order = await Order.findById(data.order_number);
+
+        if (order) {
+          order.isPaid = true;
+          order.paidAt = Date.now();
+          order.paymentResult = {
+            id: data.txn_id,
+            status: data.status,
+          };
+
+          const updatedOrder = await order.save();
+
+          res.json(updatedOrder);
+        } else {
+          res.status(404);
+          throw new Error("Order not found");
+        }
+      } else {
+        res.json(data);
+      }
     } else {
       res.status(422);
-      console.log("Incorrect data 1");
       throw new Error("Incorrect data 1");
     }
   })
