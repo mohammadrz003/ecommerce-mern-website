@@ -64,12 +64,36 @@ const orderPaySlice = createSlice({
   },
 });
 
+// ORDER PAY SLICE
+const orderListMyInitialState = { orders: [] };
+
+const orderListMySlice = createSlice({
+  name: "orderListMy",
+  initialState: orderListMyInitialState,
+  reducers: {
+    orderListMyRequest(state, action) {
+      return { loading: true };
+    },
+    orderListMySuccess(state, action) {
+      return { loading: false, orders: action.payload };
+    },
+    orderListMyFail(state, action) {
+      return { loading: false, error: action.payload };
+    },
+    orderListMyReset(state, action) {
+      return { orders: [] };
+    },
+  },
+});
+
 const orderCreateActions = orderCreateSlice.actions;
 const orderCreateReducer = orderCreateSlice.reducer;
 const orderDetailsActions = orderDetailsSlice.actions;
 const orderDetailsReducer = orderDetailsSlice.reducer;
 const orderPayActions = orderPaySlice.actions;
 const orderPayReducer = orderPaySlice.reducer;
+const orderListMyActions = orderListMySlice.actions;
+const orderListMyReducer = orderListMySlice.reducer;
 
 export {
   orderCreateActions,
@@ -78,4 +102,6 @@ export {
   orderDetailsReducer,
   orderPayActions,
   orderPayReducer,
+  orderListMyActions,
+  orderListMyReducer,
 };

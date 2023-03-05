@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import Loader from "../../components/Loader";
 import Alert from "../../components/Alert";
@@ -14,8 +14,8 @@ import axios from "axios";
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
@@ -35,12 +35,12 @@ const OrderScreen = () => {
   };
 
   const payOrderHandler = async () => {
+    setPaymentLoading(true);
     const { data } = await axios.post("/api/createInvoice", {
       totalPrice: 0.05,
       orderId,
     });
-    console.log(data);
-    window.location.replace(data.data.invoice_url);
+    window.location.href = data.data.invoice_url;
   };
 
   return (
@@ -172,13 +172,15 @@ const OrderScreen = () => {
                   </span>
                 </div>
               </div>
-              <button
-                className="w-full text-white bg-black px-5 py-3 mt-4"
-                disabled={order.orderItems.length === 0}
-                onClick={payOrderHandler}
-              >
-                Pay
-              </button>
+              {!order.isPaid && (
+                <button
+                  className="w-full text-white bg-black px-5 py-3 mt-4 disabled:opacity-70"
+                  disabled={order.orderItems.length === 0 || paymentLoading}
+                  onClick={payOrderHandler}
+                >
+                  Pay
+                </button>
+              )}
             </div>
           </div>
         )}

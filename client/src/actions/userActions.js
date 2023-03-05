@@ -1,4 +1,5 @@
 import axios from "axios";
+import { orderListMyActions } from "../reducers/orderReducers";
 
 import {
   userDetailsActions,
@@ -40,6 +41,8 @@ export const login = (email, password) => async (dispatch) => {
 export const logout = () => (dispatch) => {
   localStorage.removeItem("userInfo");
   dispatch(userLoginActions.userLogout());
+  dispatch(userDetailsActions.userDetailsReset());
+  dispatch(orderListMyActions.orderListMyReset());
 };
 
 export const register = (name, email, password) => async (dispatch) => {

@@ -3,6 +3,7 @@ import axios from "axios";
 import {
   orderCreateActions,
   orderDetailsActions,
+  orderListMyActions,
   orderPayActions,
 } from "../reducers/orderReducers";
 
@@ -96,3 +97,31 @@ export const payOrder =
       );
     }
   };
+
+export const listMyOrders = () => async (dispatch, getState) => {
+  try {
+    dispatch(orderListMyActions.orderListMyRequest());
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/orders/myorders`, config);
+
+    dispatch(orderListMyActions.orderListMySuccess(data));
+  } catch (error) {
+    dispatch(
+      orderListMyActions.orderListMyFail(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      )
+    );
+  }
+};

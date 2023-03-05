@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import Order from "../models/orderModel.js";
+import vallidatePaymentResult from "../utils/validatePaymentResult.js";
 
 // @desc    Create new order
 // @api     POST /api/orders
@@ -58,25 +59,48 @@ const getOrderById = asyncHandler(async (req, res) => {
 // @api     GET /api/orders/:id/pay
 // @access  Private
 const updateOrderToPaid = asyncHandler(async (req, res) => {
-  let order = await Order.findById(req.params.id);
+  let data = "";
+  try {
+    data = req.body;
+  } catch (e) {
+    // console.error(e);
+    data = false;
+  }
 
-  if (order) {
-    order.isPaid = true;
-    order.paidAt = Date.now();
-    order.paymentResult = {
-      id: req.body.id,
-      status: req.body.status,
-      update_time: req.body.update_time,
-      email_address: req.body.payer.email_address,
-    };
+  if (data && vallidatePaymentResult(data)) {
+    if (data.status === "completed") {
+      let order = await Order.findById(data.order_number);
 
-    const updatedOrder = await order.save();
+      if (order) {
+        order.isPaid = true;
+        order.paidAt = Date.now();
+        order.paymentResult = {
+          id: data.txn_id,
+          status: data.status,
+        };
 
-    res.json(updatedOrder);
+        const updatedOrder = await order.save();
+
+        res.json(updatedOrder);
+      } else {
+        res.status(404);
+        throw new Error("Order not found");
+      }
+    } else {
+      res.json(data);
+    }
   } else {
-    res.status(404);
-    throw new Error("Order not found");
+    res.status(422);
+    throw new Error("Incorrect data 1");
   }
 });
 
-export { addOrderItems, getOrderById, updateOrderToPaid };
+// @desc    Get logged in user orders
+// @api     GET /api/orders/myorders
+// @access  Private
+const getMyOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({ user: req.user._id });
+  res.json(orders);
+});
+
+export { addOrderItems, getOrderById, updateOrderToPaid, getMyOrders };

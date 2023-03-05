@@ -6,8 +6,9 @@ import store from "./store";
 import "./index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
+import { API_ENDPOINT } from "./constants/constants";
 
-axios.defaults.baseURL = "https://techshop.iran.liara.run";
+axios.defaults.baseURL = API_ENDPOINT;
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

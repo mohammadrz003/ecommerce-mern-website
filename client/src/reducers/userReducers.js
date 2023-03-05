@@ -57,10 +57,13 @@ const userDetailsSlice = createSlice({
     userDetailsFail(state, action) {
       return { loading: false, error: action.payload };
     },
+    userDetailsReset(state, action) {
+      return { user: {} };
+    },
   },
 });
 
-// USER DETAILS SLICE
+// USER UPDATE PROFILE SLICE
 const userUpdateProfileInitialState = {};
 
 const userUpdateProfileSlice = createSlice({
