@@ -14,6 +14,7 @@ import UserProfileButton from "../../components/UserProfileButton";
 import CartProductList from "./components/CartProductList";
 import { addToCart } from "../../actions/cartActions";
 import Alert from "../../components/Alert";
+import BackButton from "../../components/BackButton";
 
 const CartScreen = () => {
   const navigate = useNavigate();
@@ -32,32 +33,13 @@ const CartScreen = () => {
   }, [productId, qty, dispatch]);
 
   const checkoutHandler = () => {
-    navigate('/login?redirect=shipping')
+    navigate("/login?redirect=shipping");
   };
 
   return (
     <Layout>
       <Header className="justify-between">
-        <Link
-          to="/"
-          className="px-5 flex font-semibold py-6 lg:px-10 border border-gray-200 items-center space-x-3"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
-            />
-          </svg>
-          <span>BACK TO SHOP</span>
-        </Link>
+        <BackButton url="/" text="BACK TO SHOP" />
         <div className="flex items-center divide-x divide-gray-200 border-x border-b border-gray-200">
           <Cart className="hidden lg:block p-6 text-palette-graniteGray" />
           <UserProfileButton className="hidden lg:block p-6 text-palette-graniteGray" />

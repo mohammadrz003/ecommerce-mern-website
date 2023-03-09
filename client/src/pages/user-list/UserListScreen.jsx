@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { RxCross1 } from "react-icons/rx";
 import { BsCheckLg } from "react-icons/bs";
-import { AiOutlineDelete, AiOutlineEye } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 
 import Alert from "../../components/Alert";
 import Loader from "../../components/Loader";
@@ -155,15 +155,15 @@ const UserListScreen = () => {
                         <td class="px-4 py-4 text-sm whitespace-nowrap">
                           <div class="flex space-x-2 items-center gap-x-6">
                             <Link
-                              to={`/user/${user._id}/edit`}
+                              to={`/admin/user/${user._id}/edit`}
                               class="text-gray-600 transition-colors duration-200 hover:text-green-500 focus:outline-none"
                             >
-                              <AiOutlineEye className="h-5 w-auto" />
+                              <AiOutlineEdit className="h-5 w-auto" />
                             </Link>
                             <button
                               onClick={() => deleteHandler(user._id, user.name)}
                             >
-                              <AiOutlineDelete className="text-red-500" />
+                              <AiOutlineDelete className="h-5 w-auto text-red-500" />
                             </button>
                           </div>
                         </td>

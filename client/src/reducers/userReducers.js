@@ -126,6 +126,28 @@ const userDeleteSlice = createSlice({
   },
 });
 
+// USER UPDATE SLICE
+const userUpdateInitialState = { user: {} };
+
+const userUpdateSlice = createSlice({
+  name: "userUpdate",
+  initialState: userUpdateInitialState,
+  reducers: {
+    userUpdateRequest(state, action) {
+      return { loading: true };
+    },
+    userUpdateSuccess(state, action) {
+      return { loading: false, success: true };
+    },
+    userUpdateFail(state, action) {
+      return { loading: false, error: action.payload };
+    },
+    userUpdateReset(state, action) {
+      return { user: {} };
+    },
+  },
+});
+
 const userLoginActions = userLoginSlice.actions;
 const userLoginReducer = userLoginSlice.reducer;
 const userRegisterActions = userRegisterSlice.actions;
@@ -138,6 +160,8 @@ const userListActions = userListSlice.actions;
 const userListReducer = userListSlice.reducer;
 const userDeleteActions = userDeleteSlice.actions;
 const userDeleteReducer = userDeleteSlice.reducer;
+const userUpdateActions = userUpdateSlice.actions;
+const userUpdateReducer = userUpdateSlice.reducer;
 
 export {
   userLoginActions,
@@ -152,4 +176,6 @@ export {
   userListReducer,
   userDeleteActions,
   userDeleteReducer,
+  userUpdateActions,
+  userUpdateReducer,
 };
