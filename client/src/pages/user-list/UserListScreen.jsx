@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { RxCross1 } from "react-icons/rx";
 import { BsCheckLg } from "react-icons/bs";
+import { AiOutlineDelete, AiOutlineEye } from "react-icons/ai";
 
 import Alert from "../../components/Alert";
 import Loader from "../../components/Loader";
-import { listUsers } from "../../actions/userActions";
+import { listUsers, deleteUser } from "../../actions/userActions";
 import Layout from "../../layouts/Layout";
 import Header from "../../layouts/Header";
 import Cart from "../../components/cart/Cart";
 import UserProfileButton from "../../components/UserProfileButton";
-import { Link } from "react-router-dom";
-import { AiOutlineDelete, AiOutlineEye } from "react-icons/ai";
 
 const UserListScreen = () => {
   const navigate = useNavigate();
@@ -20,8 +20,12 @@ const UserListScreen = () => {
 
   const userList = useSelector((state) => state.userList);
   const { loading, error, users } = userList;
+
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
+  const userDelete = useSelector((state) => state.userDelete);
+  const { success: successDelete } = userDelete;
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
@@ -29,10 +33,12 @@ const UserListScreen = () => {
     } else {
       navigate("/login");
     }
-  }, [dispatch, navigate, userInfo]);
+  }, [dispatch, navigate, userInfo, successDelete]);
 
-  const deleteHandler = (id) => {
-    console.log("delete");
+  const deleteHandler = (id, name) => {
+    if (window.confirm(`Are you sure that you want to delete ${name}`)) {
+      dispatch(deleteUser(id));
+    }
   };
 
   return (
@@ -154,7 +160,9 @@ const UserListScreen = () => {
                             >
                               <AiOutlineEye className="h-5 w-auto" />
                             </Link>
-                            <button onClick={() => deleteHandler(user._id)}>
+                            <button
+                              onClick={() => deleteHandler(user._id, user.name)}
+                            >
                               <AiOutlineDelete className="text-red-500" />
                             </button>
                           </div>

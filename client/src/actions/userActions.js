@@ -2,6 +2,7 @@ import axios from "axios";
 import { orderListMyActions } from "../reducers/orderReducers";
 
 import {
+  userDeleteActions,
   userDetailsActions,
   userListActions,
   userLoginActions,
@@ -157,6 +158,35 @@ export const listUsers = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch(
       userListActions.userListFail(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      )
+    );
+  }
+};
+
+export const deleteUser = (id) => async (dispatch, getState) => {
+  try {
+    dispatch(userDeleteActions.userDeleteRequest());
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.delete(`/api/users/${id}`, config);
+
+    dispatch(userDeleteActions.userDeleteSuccess());
+  } catch (error) {
+    dispatch(
+      userDeleteActions.userDeleteFail(
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message
