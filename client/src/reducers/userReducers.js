@@ -85,6 +85,28 @@ const userUpdateProfileSlice = createSlice({
   },
 });
 
+// USERS LIST SLICE
+const userListInitialState = { users: [] };
+
+const userListSlice = createSlice({
+  name: "userList",
+  initialState: userListInitialState,
+  reducers: {
+    userListRequest(state, action) {
+      return { loading: true };
+    },
+    userListSuccess(state, action) {
+      return { loading: false, users: action.payload };
+    },
+    userListFail(state, action) {
+      return { loading: false, error: action.payload };
+    },
+    userListReset(state, action) {
+      return { users: [] };
+    },
+  },
+});
+
 const userLoginActions = userLoginSlice.actions;
 const userLoginReducer = userLoginSlice.reducer;
 const userRegisterActions = userRegisterSlice.actions;
@@ -93,6 +115,8 @@ const userDetailsActions = userDetailsSlice.actions;
 const userDetailsReducer = userDetailsSlice.reducer;
 const userUpdateProfileActions = userUpdateProfileSlice.actions;
 const userUpdateProfileReducer = userUpdateProfileSlice.reducer;
+const userListActions = userListSlice.actions;
+const userListReducer = userListSlice.reducer;
 
 export {
   userLoginActions,
@@ -103,4 +127,6 @@ export {
   userDetailsReducer,
   userUpdateProfileActions,
   userUpdateProfileReducer,
+  userListActions,
+  userListReducer,
 };
