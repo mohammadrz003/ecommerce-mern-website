@@ -4,6 +4,7 @@ import {
   productListActions,
   productDetailsActions,
   productDeleteActions,
+  productCreateActions,
 } from "../reducers/productReducers";
 
 export const listProducts = () => async (dispatch) => {
@@ -62,6 +63,34 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
   } catch (error) {
     dispatch(
       productDeleteActions.productDeleteFail(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      )
+    );
+  }
+};
+
+export const createProduct = () => async (dispatch, getState) => {
+  try {
+    dispatch(productCreateActions.productCreateRequest());
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.post(`/api/products`, {}, config);
+
+    dispatch(productCreateActions.productCreateSuccess(data));
+  } catch (error) {
+    dispatch(
+      productCreateActions.productCreateFail(
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message

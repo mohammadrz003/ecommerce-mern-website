@@ -11,7 +11,12 @@ import Layout from "../../layouts/Layout";
 import Header from "../../layouts/Header";
 import Cart from "../../components/cart/Cart";
 import UserProfileButton from "../../components/UserProfileButton";
-import { listProducts, deleteProduct } from "../../actions/productActions";
+import {
+  listProducts,
+  deleteProduct,
+  createProduct,
+} from "../../actions/productActions";
+import { productCreateActions } from "../../reducers/productReducers";
 
 const ProductListScreen = () => {
   const navigate = useNavigate();
@@ -27,16 +32,35 @@ const ProductListScreen = () => {
     success: successDelete,
   } = productDelete;
 
+  const productCreate = useSelector((state) => state.productCreate);
+  const {
+    loading: loadingCreate,
+    error: errorCreate,
+    success: successCreate,
+    product: createdProduct,
+  } = productCreate;
+
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   useEffect(() => {
-    if (userInfo && userInfo.isAdmin) {
-      dispatch(listProducts());
-    } else {
+    dispatch(productCreateActions.productCreateReset());
+    if (!userInfo.isAdmin) {
       navigate("/login");
     }
-  }, [dispatch, navigate, userInfo, successDelete]);
+    if (successCreate) {
+      navigate(`/admin/product/${createdProduct._id}/edit`);
+    } else {
+      dispatch(listProducts());
+    }
+  }, [
+    dispatch,
+    navigate,
+    userInfo,
+    successDelete,
+    createdProduct?._id,
+    successCreate,
+  ]);
 
   const deleteHandler = (id, name) => {
     if (window.confirm(`Are you sure that you want to delete ${name}`)) {
@@ -44,8 +68,8 @@ const ProductListScreen = () => {
     }
   };
 
-  const createProductHandler = (product) => {
-    // CREATE PRODUCT
+  const createProductHandler = () => {
+    dispatch(createProduct());
   };
 
   return (
@@ -69,6 +93,8 @@ const ProductListScreen = () => {
         </div>
         {loadingDelete && <Loader />}
         {errorDelete && <Alert variant="error">{errorDelete}</Alert>}
+        {loadingCreate && <Loader />}
+        {errorCreate && <Alert variant="error">{errorCreate}</Alert>}
         {loading ? (
           <Loader />
         ) : error ? (

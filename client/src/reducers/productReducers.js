@@ -61,12 +61,36 @@ const productDeleteSlice = createSlice({
   },
 });
 
+// PRODUCT CREATE SLICE
+const productCreateInitialState = {};
+
+const productCreateSlice = createSlice({
+  name: "productCreate",
+  initialState: productCreateInitialState,
+  reducers: {
+    productCreateRequest(state) {
+      return { loading: true };
+    },
+    productCreateSuccess(state, action) {
+      return { loading: false, success: true, product: action.payload };
+    },
+    productCreateFail(state, action) {
+      return { loading: false, error: action.payload };
+    },
+    productCreateReset(state, action) {
+      return {};
+    },
+  },
+});
+
 const productListActions = productListSlice.actions;
 const productListReducer = productListSlice.reducer;
 const productDetailsActions = productDetailsSlice.actions;
 const productDetailReducer = productDetailsSlice.reducer;
 const productDeleteActions = productDeleteSlice.actions;
 const productDeleteReducer = productDeleteSlice.reducer;
+const productCreateActions = productCreateSlice.actions;
+const productCreateReducer = productCreateSlice.reducer;
 
 export {
   productListActions,
@@ -75,4 +99,6 @@ export {
   productDetailReducer,
   productDeleteActions,
   productDeleteReducer,
+  productCreateActions,
+  productCreateReducer,
 };
