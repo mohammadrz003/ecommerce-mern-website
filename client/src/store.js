@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import {
   productListReducer,
   productDetailReducer,
+  productDeleteReducer,
 } from "./reducers/productReducers";
 import { cartReducer } from "./reducers/cartReducers";
 import {
@@ -50,6 +51,7 @@ const store = configureStore({
   reducer: {
     productList: productListReducer,
     productDetails: productDetailReducer,
+    productDelete: productDeleteReducer,
     cart: cartReducer,
     userLogin: userLoginReducer,
     userRegister: userRegisterReducer,

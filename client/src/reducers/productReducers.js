@@ -19,9 +19,6 @@ const productListSlice = createSlice({
   },
 });
 
-export const productListActions = productListSlice.actions;
-const productListReducer = productListSlice.reducer;
-
 // PRODUCT DETAIL SLICE
 const productDetailInitialState = {
   product: { reviews: [] },
@@ -43,7 +40,39 @@ const productDetailsSlice = createSlice({
   },
 });
 
-export const productDetailsActions = productDetailsSlice.actions;
-const productDetailReducer = productDetailsSlice.reducer;
+// PRODUCT DELETE SLICE
+const productDeleteInitialState = {
+  product: {},
+};
 
-export { productListReducer, productDetailReducer };
+const productDeleteSlice = createSlice({
+  name: "productDelete",
+  initialState: productDeleteInitialState,
+  reducers: {
+    productDeleteRequest(state) {
+      return { loading: true };
+    },
+    productDeleteSuccess(state, action) {
+      return { loading: false, success: true };
+    },
+    productDeleteFail(state, action) {
+      return { loading: false, error: action.payload };
+    },
+  },
+});
+
+const productListActions = productListSlice.actions;
+const productListReducer = productListSlice.reducer;
+const productDetailsActions = productDetailsSlice.actions;
+const productDetailReducer = productDetailsSlice.reducer;
+const productDeleteActions = productDeleteSlice.actions;
+const productDeleteReducer = productDeleteSlice.reducer;
+
+export {
+  productListActions,
+  productListReducer,
+  productDetailsActions,
+  productDetailReducer,
+  productDeleteActions,
+  productDeleteReducer,
+};

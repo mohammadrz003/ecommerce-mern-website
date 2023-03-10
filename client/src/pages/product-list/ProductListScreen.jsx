@@ -11,7 +11,7 @@ import Layout from "../../layouts/Layout";
 import Header from "../../layouts/Header";
 import Cart from "../../components/cart/Cart";
 import UserProfileButton from "../../components/UserProfileButton";
-import { listProducts } from "../../actions/productActions";
+import { listProducts, deleteProduct } from "../../actions/productActions";
 
 const ProductListScreen = () => {
   const navigate = useNavigate();
@@ -19,6 +19,13 @@ const ProductListScreen = () => {
 
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
+
+  const productDelete = useSelector((state) => state.productDelete);
+  const {
+    loading: loadingDelete,
+    error: errorDelete,
+    success: successDelete,
+  } = productDelete;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -29,11 +36,11 @@ const ProductListScreen = () => {
     } else {
       navigate("/login");
     }
-  }, [dispatch, navigate, userInfo]);
+  }, [dispatch, navigate, userInfo, successDelete]);
 
   const deleteHandler = (id, name) => {
     if (window.confirm(`Are you sure that you want to delete ${name}`)) {
-      // DELETE PRODUCTS
+      dispatch(deleteProduct(id));
     }
   };
 
@@ -60,6 +67,8 @@ const ProductListScreen = () => {
             <span>CREATE PRODUCT</span>
           </button>
         </div>
+        {loadingDelete && <Loader />}
+        {errorDelete && <Alert variant="error">{errorDelete}</Alert>}
         {loading ? (
           <Loader />
         ) : error ? (
