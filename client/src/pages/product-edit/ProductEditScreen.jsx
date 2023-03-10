@@ -10,7 +10,11 @@ import Cart from "../../components/cart/Cart";
 import UserProfileButton from "../../components/UserProfileButton";
 import BackButton from "../../components/BackButton";
 import Loader from "../../components/Loader";
-import { listProductDetails } from "../../actions/productActions";
+import {
+  listProductDetails,
+  updateProduct,
+} from "../../actions/productActions";
+import { productUpdateActions } from "../../reducers/productReducers";
 
 const ProductEditScreen = () => {
   const [inputValues, setInputValues] = useState({
@@ -29,6 +33,13 @@ const ProductEditScreen = () => {
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
 
+  const productUpdate = useSelector((state) => state.productUpdate);
+  const {
+    loading: loadingUpdate,
+    error: errorUpdate,
+    success: successUpdate,
+  } = productUpdate;
+
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo: userLoginInfo } = userLogin;
 
@@ -37,20 +48,25 @@ const ProductEditScreen = () => {
       navigate("/login");
     }
 
-    if (!product.name || product._id !== productId) {
-      dispatch(listProductDetails(productId));
+    if (successUpdate) {
+      dispatch(productUpdateActions.productUpdateReset());
+      navigate("/admin/productlist");
     } else {
-      setInputValues({
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        brand: product.brand,
-        category: product.category,
-        countInStock: product.countInStock,
-        description: product.description,
-      });
+      if (!product.name || product._id !== productId) {
+        dispatch(listProductDetails(productId));
+      } else {
+        setInputValues({
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          brand: product.brand,
+          category: product.category,
+          countInStock: product.countInStock,
+          description: product.description,
+        });
+      }
     }
-  }, [dispatch, navigate, userLoginInfo, product, productId]);
+  }, [dispatch, navigate, userLoginInfo, product, productId, successUpdate]);
 
   const inputChangeHandler = (e) => {
     const { value, name } = e.target;
@@ -61,7 +77,7 @@ const ProductEditScreen = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    // UPDATE PRODUCT
+    dispatch(updateProduct({ _id: productId, ...inputValues }));
   };
 
   return (
@@ -75,6 +91,7 @@ const ProductEditScreen = () => {
       </Header>
       <FormContainer className="py-10 px-5">
         <h1 className="text-3xl mb-6">Edit Product</h1>
+        {errorUpdate && <Alert variant="error">{errorUpdate}</Alert>}
         {loading ? (
           <Loader />
         ) : error ? (
@@ -179,8 +196,12 @@ const ProductEditScreen = () => {
                 onChange={inputChangeHandler}
               />
             </div>
-            <button type="submit" className="btn w-full mt-5">
-              Update
+            <button
+              type="submit"
+              disabled={loadingUpdate}
+              className="btn w-full mt-5"
+            >
+              {loadingUpdate ? "Loading..." : "Update"}
             </button>
           </form>
         )}

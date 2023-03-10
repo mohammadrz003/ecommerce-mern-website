@@ -83,6 +83,28 @@ const productCreateSlice = createSlice({
   },
 });
 
+// PRODUCT UPDATE SLICE
+const productUpdateInitialState = { product: {} };
+
+const productUpdateSlice = createSlice({
+  name: "productUpdate",
+  initialState: productUpdateInitialState,
+  reducers: {
+    productUpdateRequest(state) {
+      return { loading: true };
+    },
+    productUpdateSuccess(state, action) {
+      return { loading: false, success: true, product: action.payload };
+    },
+    productUpdateFail(state, action) {
+      return { loading: false, error: action.payload };
+    },
+    productUpdateReset(state, action) {
+      return { product: {} };
+    },
+  },
+});
+
 const productListActions = productListSlice.actions;
 const productListReducer = productListSlice.reducer;
 const productDetailsActions = productDetailsSlice.actions;
@@ -91,6 +113,8 @@ const productDeleteActions = productDeleteSlice.actions;
 const productDeleteReducer = productDeleteSlice.reducer;
 const productCreateActions = productCreateSlice.actions;
 const productCreateReducer = productCreateSlice.reducer;
+const productUpdateActions = productUpdateSlice.actions;
+const productUpdateReducer = productUpdateSlice.reducer;
 
 export {
   productListActions,
@@ -101,4 +125,6 @@ export {
   productDeleteReducer,
   productCreateActions,
   productCreateReducer,
+  productUpdateActions,
+  productUpdateReducer,
 };
