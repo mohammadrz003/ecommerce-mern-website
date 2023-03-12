@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -26,6 +27,7 @@ const ProductEditScreen = () => {
     countInStock: 0,
     description: "",
   });
+  const [uploading, setUploading] = useState(false);
   const { id: productId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -78,6 +80,28 @@ const ProductEditScreen = () => {
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(updateProduct({ _id: productId, ...inputValues }));
+  };
+
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+    setUploading(true);
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const { data } = await axios.post("/api/upload", formData, config);
+      setInputValues((curState) => {
+        return { ...curState, image: data };
+      });
+      setUploading(false);
+    } catch (error) {
+      console.log(error);
+      setUploading(false);
+    }
   };
 
   return (
@@ -139,6 +163,12 @@ const ProductEditScreen = () => {
                 name="image"
                 onChange={inputChangeHandler}
               />
+              <input
+                type="file"
+                className="file-input w-full max-w-xs"
+                onChange={uploadFileHandler}
+              />
+              {uploading && <Loader />}
             </div>
             <div className="form-control">
               <label className="label" htmlFor="brand">

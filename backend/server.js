@@ -1,3 +1,4 @@
+import path from "path";
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -10,6 +11,8 @@ import connectDB from "./config/db.js";
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import uploadRoutes from "./routes/uploadRoutes.js";
+
 import { updateOrderToPaid } from "./controllers/orderControllers.js";
 
 dotenv.config();
@@ -30,6 +33,7 @@ app.get("/", (req, res) => {
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/upload", uploadRoutes);
 app.post("/api/createInvoice", async (req, res) => {
   const { totalPrice, orderId } = req.body;
   const { data } = await axios.get(
@@ -38,6 +42,10 @@ app.post("/api/createInvoice", async (req, res) => {
   res.json(data);
 });
 app.post("/api/payCallback", updateOrderToPaid);
+
+// static assets
+const __dirname = path.resolve();
+app.use("/uploads", express.static(path.join(__dirname, '/uploads')));
 
 // Error handling
 app.use(notFound);
