@@ -58,13 +58,35 @@ const orderPaySlice = createSlice({
     orderPayFail(state, action) {
       return { loading: false, error: action.payload };
     },
-    orderPayRest(state, action) {
+    orderPayReset(state, action) {
       return {};
     },
   },
 });
 
-// ORDER PAY SLICE
+// ORDER DELIVER SLICE
+const orderDeliverInitialState = {};
+
+const orderDeliverSlice = createSlice({
+  name: "orderDeliver",
+  initialState: orderDeliverInitialState,
+  reducers: {
+    orderDeliverRequest(state, action) {
+      return { loading: true };
+    },
+    orderDeliverSuccess(state, action) {
+      return { loading: false, success: true };
+    },
+    orderDeliverFail(state, action) {
+      return { loading: false, error: action.payload };
+    },
+    orderDeliverReset(state, action) {
+      return {};
+    },
+  },
+});
+
+// ORDER LIST MY SLICE
 const orderListMyInitialState = { orders: [] };
 
 const orderListMySlice = createSlice({
@@ -86,6 +108,25 @@ const orderListMySlice = createSlice({
   },
 });
 
+// ORDER LIST SLICE
+const orderListInitialState = { orders: [] };
+
+const orderListSlice = createSlice({
+  name: "orderList",
+  initialState: orderListInitialState,
+  reducers: {
+    orderListRequest(state, action) {
+      return { loading: true };
+    },
+    orderListSuccess(state, action) {
+      return { loading: false, orders: action.payload };
+    },
+    orderListFail(state, action) {
+      return { loading: false, error: action.payload };
+    },
+  },
+});
+
 const orderCreateActions = orderCreateSlice.actions;
 const orderCreateReducer = orderCreateSlice.reducer;
 const orderDetailsActions = orderDetailsSlice.actions;
@@ -94,6 +135,10 @@ const orderPayActions = orderPaySlice.actions;
 const orderPayReducer = orderPaySlice.reducer;
 const orderListMyActions = orderListMySlice.actions;
 const orderListMyReducer = orderListMySlice.reducer;
+const orderListActions = orderListSlice.actions;
+const orderListReducer = orderListSlice.reducer;
+const orderDeliverActions = orderDeliverSlice.actions;
+const orderDeliverReducer = orderDeliverSlice.reducer;
 
 export {
   orderCreateActions,
@@ -104,4 +149,8 @@ export {
   orderPayReducer,
   orderListMyActions,
   orderListMyReducer,
+  orderListActions,
+  orderListReducer,
+  orderDeliverActions,
+  orderDeliverReducer,
 };

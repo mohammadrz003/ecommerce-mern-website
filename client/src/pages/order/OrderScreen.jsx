@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import Loader from "../../components/Loader";
 import Alert from "../../components/Alert";
@@ -8,12 +9,15 @@ import Layout from "../../layouts/Layout";
 import Header from "../../layouts/Header";
 import Cart from "../../components/cart/Cart";
 import UserProfileButton from "../../components/UserProfileButton";
-import { getOrderDetails } from "../../actions/orderActions";
-import { orderPayActions } from "../../reducers/orderReducers";
-import axios from "axios";
+import { getOrderDetails, deliverOrder } from "../../actions/orderActions";
+import {
+  orderPayActions,
+  orderDeliverActions,
+} from "../../reducers/orderReducers";
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [paymentLoading, setPaymentLoading] = useState(false);
 
@@ -23,12 +27,31 @@ const OrderScreen = () => {
   const orderPay = useSelector((state) => state.orderPay);
   const { loading: loadingPay, success: successPay } = orderPay;
 
+  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   useEffect(() => {
-    if (!order || successPay) {
-      dispatch(orderPayActions.orderPayRest());
+    if (!userInfo) {
+      navigate("/login");
+    }
+
+    if (!order || successPay || successDeliver) {
+      dispatch(orderPayActions.orderPayReset());
+      dispatch(orderDeliverActions.orderDeliverReset());
       dispatch(getOrderDetails(orderId));
     }
-  }, [dispatch, order, orderId, successPay]);
+  }, [
+    dispatch,
+    order,
+    orderId,
+    successPay,
+    successDeliver,
+    navigate,
+    userInfo,
+  ]);
 
   const addDecimals = (num) => {
     return (Math.round(num * 100) / 100).toFixed(2);
@@ -41,6 +64,10 @@ const OrderScreen = () => {
       orderId,
     });
     window.location.href = data.data.invoice_url;
+  };
+
+  const deliverHandler = async () => {
+    dispatch(deliverOrder(order));
   };
 
   return (
@@ -172,8 +199,9 @@ const OrderScreen = () => {
                   </span>
                 </div>
               </div>
-              {!order.isPaid && (
+              {!order.isPaid && order.user._id === userInfo._id && (
                 <button
+                  type="button"
                   className="w-full text-white bg-black px-5 py-3 mt-4 disabled:opacity-70"
                   disabled={order.orderItems.length === 0 || paymentLoading}
                   onClick={payOrderHandler}
@@ -181,6 +209,19 @@ const OrderScreen = () => {
                   Pay
                 </button>
               )}
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelivered && (
+                  <button
+                    type="button"
+                    className="w-full text-white bg-green-500 px-5 py-3 mt-4 disabled:opacity-70"
+                    disabled={loadingDeliver}
+                    onClick={deliverHandler}
+                  >
+                    Mark As Delivered
+                  </button>
+                )}
             </div>
           </div>
         )}

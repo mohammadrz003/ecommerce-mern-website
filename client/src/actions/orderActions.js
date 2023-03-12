@@ -2,7 +2,9 @@ import axios from "axios";
 
 import {
   orderCreateActions,
+  orderDeliverActions,
   orderDetailsActions,
+  orderListActions,
   orderListMyActions,
   orderPayActions,
 } from "../reducers/orderReducers";
@@ -98,6 +100,38 @@ export const payOrder =
     }
   };
 
+export const deliverOrder = (order) => async (dispatch, getState) => {
+  try {
+    dispatch(orderDeliverActions.orderDeliverRequest());
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.put(
+      `/api/orders/${order._id}/deliver`,
+      {},
+      config
+    );
+
+    dispatch(orderDeliverActions.orderDeliverSuccess(data));
+  } catch (error) {
+    dispatch(
+      orderDeliverActions.orderDeliverFail(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      )
+    );
+  }
+};
+
 export const listMyOrders = () => async (dispatch, getState) => {
   try {
     dispatch(orderListMyActions.orderListMyRequest());
@@ -118,6 +152,34 @@ export const listMyOrders = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch(
       orderListMyActions.orderListMyFail(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      )
+    );
+  }
+};
+
+export const listOrders = () => async (dispatch, getState) => {
+  try {
+    dispatch(orderListActions.orderListRequest());
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/orders`, config);
+
+    dispatch(orderListActions.orderListSuccess(data));
+  } catch (error) {
+    dispatch(
+      orderListActions.orderListFail(
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message
