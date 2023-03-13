@@ -1,6 +1,5 @@
 import path from "path";
 import express from "express";
-import cors from "cors";
 import dotenv from "dotenv";
 import axios from "axios";
 import colors from "colors";
@@ -25,16 +24,6 @@ if (process.env.NODE_ENV === "development") {
 }
 
 app.use(express.json());
-app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-  })
-);
-
-app.get("/", (req, res) => {
-  res.send("server is running...");
-});
 
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
@@ -43,7 +32,7 @@ app.use("/api/upload", uploadRoutes);
 app.post("/api/createInvoice", async (req, res) => {
   const { totalPrice, orderId } = req.body;
   const { data } = await axios.get(
-    `https://plisio.net/api/v1/invoices/new?source_currency=USD&source_amount=${totalPrice}&order_name=techshop&order_number=${orderId}&api_key=${process.env.PLISIO_SECRET_KEY}&json=true&callback_url=https://techshop.iran.liara.run/api/payCallback?json=true&success_url=https://techshop.moonfo.com/order/${orderId}`
+    `https://plisio.net/api/v1/invoices/new?source_currency=USD&source_amount=${totalPrice}&order_name=techshop&order_number=${orderId}&api_key=${process.env.PLISIO_SECRET_KEY}&json=true&callback_url=${process.env.PLISIO_CALLBACK_URL}?json=true&success_url=${process.env.PLISIO_SUCCESS_URL}${orderId}`
   );
   res.json(data);
 });
@@ -52,6 +41,18 @@ app.post("/api/payCallback", updateOrderToPaid);
 // static assets
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/client/build")));
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("server is running...");
+  });
+}
 
 // Error handling
 app.use(notFound);
