@@ -105,6 +105,28 @@ const productUpdateSlice = createSlice({
   },
 });
 
+// PRODUCT CREATE REVIEW SLICE
+const productCreateReviewInitialState = {};
+
+const productCreateReviewSlice = createSlice({
+  name: "productCreateReview",
+  initialState: productCreateReviewInitialState,
+  reducers: {
+    productCreateReviewRequest(state) {
+      return { loading: true };
+    },
+    productCreateReviewSuccess(state, action) {
+      return { loading: false, success: true };
+    },
+    productCreateReviewFail(state, action) {
+      return { loading: false, error: action.payload };
+    },
+    productCreateReviewReset(state, action) {
+      return {};
+    },
+  },
+});
+
 const productListActions = productListSlice.actions;
 const productListReducer = productListSlice.reducer;
 const productDetailsActions = productDetailsSlice.actions;
@@ -115,6 +137,8 @@ const productCreateActions = productCreateSlice.actions;
 const productCreateReducer = productCreateSlice.reducer;
 const productUpdateActions = productUpdateSlice.actions;
 const productUpdateReducer = productUpdateSlice.reducer;
+const productCreateReviewActions = productCreateReviewSlice.actions;
+const productCreateReviewReducer = productCreateReviewSlice.reducer;
 
 export {
   productListActions,
@@ -127,4 +151,6 @@ export {
   productCreateReducer,
   productUpdateActions,
   productUpdateReducer,
+  productCreateReviewActions,
+  productCreateReviewReducer,
 };

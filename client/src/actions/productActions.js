@@ -6,6 +6,7 @@ import {
   productDeleteActions,
   productCreateActions,
   productUpdateActions,
+  productCreateReviewActions,
 } from "../reducers/productReducers";
 
 export const listProducts = () => async (dispatch) => {
@@ -125,6 +126,39 @@ export const updateProduct = (product) => async (dispatch, getState) => {
   } catch (error) {
     dispatch(
       productUpdateActions.productUpdateFail(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      )
+    );
+  }
+};
+
+export const createProductReview = (productId, review) => async (dispatch, getState) => {
+  try {
+    dispatch(productCreateReviewActions.productCreateReviewRequest());
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    await axios.post(
+      `/api/products/${productId}/reviews`,
+      review,
+      config
+    );
+
+    dispatch(productCreateReviewActions.productCreateReviewSuccess());
+  } catch (error) {
+    dispatch(
+      productCreateReviewActions.productCreateReviewFail(
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message
