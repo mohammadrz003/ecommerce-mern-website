@@ -1,15 +1,21 @@
-import React, { useState } from "react";
-import Cart from "../../components/cart/Cart";
-import FilterProducts from "../../components/FilterProducts";
-import Header from "../../layouts/Header";
-import Layout from "../../layouts/Layout";
-import ProductList from "./container/ProductList";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import {
   BsFillGrid3X2GapFill,
   BsFillGridFill,
   BsGrid3X3GapFill,
 } from "react-icons/bs";
+
+import Cart from "../../components/cart/Cart";
+import FilterProducts from "../../components/FilterProducts";
+import Header from "../../layouts/Header";
+import Layout from "../../layouts/Layout";
+import ProductList from "./container/ProductList";
 import UserProfileButton from "../../components/UserProfileButton";
+import SearchBox from "../../components/SearchBox";
+import { listProducts } from "../../actions/productActions";
+import Pagination from "../../components/Pagination";
 
 const viewModes = [
   {
@@ -27,7 +33,20 @@ const viewModes = [
 ];
 
 const HomeScreen = () => {
+  const dispatch = useDispatch();
+  const params = useParams();
+
+  const keyword = params.keyword;
+  const pageNumber = params.pageNumber || 1;
+
+  const productList = useSelector((state) => state.productList);
+  const { page, pages } = productList;
+
   const [viewMode, setViewMode] = useState(viewModes[2].mode);
+
+  useEffect(() => {
+    dispatch(listProducts(keyword, pageNumber));
+  }, [dispatch, keyword, pageNumber]);
 
   const changeViewModeHandler = (viewModeValue) => {
     setViewMode(viewModeValue);
@@ -51,8 +70,11 @@ const HomeScreen = () => {
 
   return (
     <Layout>
-      <Header className="justify-end">
-        <div className="flex items-center divide-x divide-gray-200 border-x border-b border-gray-200">
+      <Header className="flex flex-col-reverse gap-y-2 lg:flex-row lg:items-center lg:gap-x-5 lg:justify-between">
+        <div className="w-full lg:max-w-sm">
+          <SearchBox />
+        </div>
+        <div className="flex items-center justify-between divide-x divide-gray-200 border-x border-b border-gray-200">
           <FilterProducts
             activeViewMode={viewMode}
             viewModes={viewModes}
@@ -64,6 +86,12 @@ const HomeScreen = () => {
       </Header>
       <main className="container mx-auto px-5 py-8 md:px-14 md:py-16">
         <ProductList viewModeClasses={viewModeClasses} />
+        <Pagination
+          pages={pages}
+          page={page}
+          keyword={keyword ? keyword : ""}
+          className="mt-5"
+        />
       </main>
     </Layout>
   );

@@ -11,7 +11,12 @@ const productListSlice = createSlice({
       return { loading: true, products: [] };
     },
     productListSuccess(state, action) {
-      return { loading: false, products: action.payload };
+      return {
+        loading: false,
+        products: action.payload.products,
+        pages: action.payload.pages,
+        page: action.payload.page,
+      };
     },
     productListFail(state, action) {
       return { loading: false, error: action.payload };

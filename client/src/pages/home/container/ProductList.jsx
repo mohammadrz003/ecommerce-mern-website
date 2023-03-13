@@ -1,18 +1,12 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 
 import ProductItem from "./ProductItem";
-import { listProducts } from "../../../actions/productActions";
 import Loader from "../../../components/Loader";
 
 const ProductList = (props) => {
-  const dispatch = useDispatch();
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
-
-  useEffect(() => {
-    dispatch(listProducts());
-  }, [dispatch]);
 
   return (
     <>
