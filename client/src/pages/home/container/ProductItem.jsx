@@ -1,10 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ProductItem = (props) => {
+  const navigate = useNavigate();
   const [isShown, setIsShown] = useState(false);
 
   const product = props.product;
+
+  const addToCartHandler = () => {
+    navigate(`/cart/${product._id}?qty=1`);
+  };
 
   return (
     <li
@@ -25,7 +30,10 @@ const ProductItem = (props) => {
         </h5>
       </Link>
       {isShown && (
-        <button className="font-medium text-green-500 py-2 px-4">
+        <button
+          onClick={addToCartHandler}
+          className="font-medium text-green-500 py-2 px-4"
+        >
           ADD TO CART
         </button>
       )}

@@ -90,7 +90,7 @@ const HomeScreen = () => {
           pages={pages}
           page={page}
           keyword={keyword ? keyword : ""}
-          className="mt-5"
+          className="mt-10"
         />
       </main>
     </Layout>
