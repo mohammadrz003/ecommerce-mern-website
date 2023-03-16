@@ -32,5 +32,48 @@ this project is scalable enough if you want to add more payment options like: Pa
 - [Mongoose](https://mongoosejs.com/) - Elegant mongodb object modeling for node.js
 - [TailwindCSS](https://tailwindcss.com/) - A utility-first CSS framework
 - [Redux toolkit](https://redux-toolkit.js.org/) - A JavaScript library for managing and centralizing application state.
-
   
+## 💽 Installation
+  
+### # Step 1:
+  
+install MongoDB for windows with [this](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-windows/) official guide
+### # Step 2:
+  
+in the project root folder, open termial and run command `npm install` or `yarn install` to install all the neccesary packages for the *Back-end*.  
+for the *Front-end*, you need to go into the ***client*** folder with `cd ./client` command and again, run `npm install` or `yarn install` to add all the essential libraries to *node_modules* folder.
+  
+### # Step 3:
+  
+at this point, you must create a file called `.env` in the project root folder.  
+you need to specify some variables in this file including *NODE_ENV*, *MONGO_URI*, *MONGO_URI* and other stuff.  
+you can see all the required variables in a file called `.env.example` in project root folder.
+  
+### # Step 4:
+  
+if you want to use a cryptocurrency payment in this application, you need to go to the [PLISIO](https://plisio.net) website and sign up for a new account so that you can get a SECRET KEY for your application.  
+then you can go on to the next step and fill the `PLISIO_SECRET_KEY` variable with your secret key that you got from [PLISIO](https://plisio.net) website
+### # Step 5:
+  
+here is an example of what you will need to fill in the variables with:
+
+    NODE_ENV = development
+    MONGO_URI = mongodb://127.0.0.1:27017/techshop-ecommerce?authSource=admin
+    PORT = 5000
+    JWT_SECRET = <random_strong_password>
+    PLISIO_SECRET_KEY = <get_secrent_key_from_PLISIO>
+    PLISIO_CALLBACK_URL = https://example.com/payCallback
+    PLISIO_SUCCESS_URL = https://example.com/order/
+
+### # Step 6:
+  
+at the end, the only thing you need is that you must run `npm run dev` in your project folder to start both the front-end and back-end at the same time
+  
+
+## 📧 Support
+  
+<rezaiimohammad003@gmail.com>  
+
+## 🧾 License
+  
+[MIT License](LICENSE)
