@@ -62,7 +62,7 @@ here is an example of what you will need to fill in the variables with:
     PORT = 5000
     JWT_SECRET = <random_strong_password>
     PLISIO_SECRET_KEY = <get_secrent_key_from_PLISIO>
-    PLISIO_CALLBACK_URL = https://example.com/payCallback
+    PLISIO_CALLBACK_URL = https://example.com/api/payCallback
     PLISIO_SUCCESS_URL = https://example.com/order/
 
 ### # Step 6:
