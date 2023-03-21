@@ -1,8 +1,7 @@
 import crypto from "crypto";
 
-const secretKey = process.env.PLISIO_SECRET_KEY;
-
 const vallidatePaymentResult = function (data) {
+  const secretKey = process.env.PLISIO_SECRET_KEY;
   if (typeof data === "object" && data.verify_hash && secretKey) {
     const ordered = { ...data };
     delete ordered.verify_hash;

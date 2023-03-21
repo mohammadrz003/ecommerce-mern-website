@@ -32,7 +32,7 @@ app.use("/api/upload", uploadRoutes);
 app.post("/api/createInvoice", async (req, res) => {
   const { totalPrice, orderId } = req.body;
   const { data } = await axios.get(
-    `https://plisio.net/api/v1/invoices/new?source_currency=USD&source_amount=${totalPrice}&order_name=techshop&order_number=${orderId}&api_key=${process.env.PLISIO_SECRET_KEY}&json=true&callback_url=${process.env.PLISIO_CALLBACK_URL}&success_url=${process.env.PLISIO_SUCCESS_URL}${orderId}`
+    `https://plisio.net/api/v1/invoices/new?source_currency=USD&source_amount=${totalPrice}&order_name=techshop&order_number=${orderId}&api_key=${process.env.PLISIO_SECRET_KEY}&json=true&callback_url=${process.env.PLISIO_CALLBACK_URL}?json=true&success_url=${process.env.PLISIO_SUCCESS_URL}${orderId}`
   );
   res.json(data);
 });
