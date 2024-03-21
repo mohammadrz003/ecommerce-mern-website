@@ -19,7 +19,7 @@ this project is scalable enough if you want to add more payment options like: Pa
   
 ## 🎴 Screenshot  
   
-![home page](https://files.moonfo.com/general-images/github/website-preview.jpg "Home page")
+![home page](https://raw.githubusercontent.com/mohammadrz003/ecommerce-mern-website/master/online-shop.jpg "Home page")
   
   
 ## ⚒️ Built with
