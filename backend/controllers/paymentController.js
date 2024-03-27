@@ -94,6 +94,8 @@ const statusCallback = asyncHandler(async (req, res) => {
     order.paidAt = new Date().toISOString();
   }
 
+  order.save();
+
   res.status(200).end();
 });
 
