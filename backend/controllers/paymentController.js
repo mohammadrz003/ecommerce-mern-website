@@ -54,15 +54,47 @@ const createInvoice = asyncHandler(async (req, res) => {
 // @api     POST /api/payment/status-callback
 // @access  Public
 const statusCallback = asyncHandler(async (req, res) => {
-  const data = req.body;
+  const paymentStatus = req.body;
 
-  // if (!data.sign) {
-  //   res.status(400);
-  //   throw new Error("Payload is not valid");
-  // }
-  console.log("callback data: ", data);
+  // webhook verification
+  if (!paymentStatus.sign) {
+    res.status(400);
+    throw new Error("Payload is not valid!");
+  }
 
-  res.send("Hello Buddy!");
+  console.log("callback data: ", paymentStatus);
+
+  const { sign, ...data } = paymentStatus;
+
+  const paymentStatusHash = crypto
+    .createHash("md5")
+    .update(
+      Buffer.from(JSON.stringify(data)).toString("base64") +
+        process.env.CRYPTOMUS_PAYMENT_API_KEY
+    )
+    .digest("hex");
+
+  if (paymentStatusHash !== sign) {
+    res.status(400);
+    throw new Error("Signature is not valid!");
+  }
+
+  // process payment
+
+  // await Order.findOneAndUpdate(
+  //   { "paymentResult.id": data.uuid },
+  //   { $set: { "paymentResult.status": data.status } }
+  // );
+
+  let order = await Order.findOne({ "paymentResult.id": data.uuid });
+  order.paymentResult.status = data.status;
+
+  if (data.status === "paid" || data.status === "paid_over") {
+    order.isPaid = true;
+    order.paidAt = new Date().toISOString();
+  }
+
+  res.status(200).end();
 });
 
 export { createInvoice, statusCallback };
