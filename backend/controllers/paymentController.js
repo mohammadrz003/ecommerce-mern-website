@@ -55,6 +55,11 @@ const createInvoice = asyncHandler(async (req, res) => {
 // @access  Public
 const statusCallback = asyncHandler(async (req, res) => {
   const data = req.body;
+
+  // if (!data.sign) {
+  //   res.status(400);
+  //   throw new Error("Payload is not valid");
+  // }
   console.log("callback data: ", data);
 
   res.send("Hello Buddy!");

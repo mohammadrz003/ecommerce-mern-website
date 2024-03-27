@@ -7,6 +7,6 @@ import {
 import { protect } from "../middleware/authMiddleware.js";
 
 router.post("/create-invoice", protect, createInvoice);
-router.post("/status-callback", protect, statusCallback);
+router.post("/status-callback", statusCallback);
 
 export default router;
