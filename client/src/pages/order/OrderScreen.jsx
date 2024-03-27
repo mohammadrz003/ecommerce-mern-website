@@ -59,11 +59,22 @@ const OrderScreen = () => {
 
   const payOrderHandler = async () => {
     setPaymentLoading(true);
-    const { data } = await axios.post("/api/createInvoice", {
-      totalPrice: 0.05,
-      orderId,
-    });
-    window.location.href = data.data.invoice_url;
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.post(
+      "/api/payment/create-invoice",
+      {
+        totalAmount: addDecimals(order.totalPrice),
+        orderId,
+      },
+      config
+    );
+    window.location.href = data.result.url;
   };
 
   const deliverHandler = async () => {

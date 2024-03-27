@@ -21,7 +21,7 @@ const PlaceOrderScreen = () => {
     (acc, item) => acc + item.price * item.qty,
     0
   );
-  const shippingPrice = itemsPrice > 100 ? 0 : 10;
+  const shippingPrice = 0;
   const taxPrice = Number((0.15 * itemsPrice).toFixed(2));
   const totalPrice =
     Number(itemsPrice) + Number(shippingPrice) + Number(taxPrice);
