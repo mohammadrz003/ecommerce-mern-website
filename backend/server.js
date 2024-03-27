@@ -42,17 +42,9 @@ app.post("/api/payCallback", updateOrderToPaid);
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "/client/build")));
-
-  app.get("*", (req, res) =>
-    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"))
-  );
-} else {
-  app.get("/", (req, res) => {
-    res.send("server is running...");
-  });
-}
+app.get("/", (req, res) => {
+  res.send("server is running...");
+});
 
 // Error handling
 app.use(notFound);

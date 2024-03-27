@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { BsPaypal } from "react-icons/bs";
+import { AiFillDollarCircle } from "react-icons/ai";
 import { AiFillCheckCircle } from "react-icons/ai";
 import { FaBitcoin } from "react-icons/fa";
 
@@ -20,7 +20,7 @@ const PaymentScreen = () => {
   const { shippingAddress, paymentMethod: paymentMethodState } = cart;
 
   const [paymentMethod, setPaymentMethod] = useState(
-    paymentMethodState ? paymentMethodState : "PayPal"
+    paymentMethodState ? paymentMethodState : "Fiat"
   );
 
   useEffect(() => {
@@ -50,18 +50,18 @@ const PaymentScreen = () => {
           <div className="grid grid-cols-2 gap-5">
             <button
               type="button"
-              onClick={() => setPaymentMethod("PayPal")}
+              onClick={() => setPaymentMethod("Fiat")}
               className={`border ${
-                paymentMethod === "PayPal"
+                paymentMethod === "Fiat"
                   ? "border-blue-500 shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px]"
                   : "border-gray-800"
               } rounded-sm flex flex-col gap-y-2 justify-center items-center p-5 relative`}
             >
-              {paymentMethod === "PayPal" && (
+              {paymentMethod === "Fiat" && (
                 <AiFillCheckCircle className="absolute right-[10px] top-[8%] text-blue-500" />
               )}
-              <BsPaypal className="h-10 w-auto" />
-              <span className="text-gray-600">PayPal</span>
+              <AiFillDollarCircle className="h-10 w-auto" />
+              <span className="text-gray-600">Fiat currency</span>
             </button>
             <button
               type="button"

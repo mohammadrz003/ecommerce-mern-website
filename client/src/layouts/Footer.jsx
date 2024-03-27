@@ -83,7 +83,9 @@ const Footer = () => {
         </button>
       </div>
       <div className="py-10">
-        <p className="text-center text-palette-graniteGray">&copy; 2022. created by mmdrz003</p>
+        <p className="text-center text-palette-graniteGray">
+          &copy; 2024. created by Moonfo
+        </p>
       </div>
     </footer>
   );
