@@ -81,11 +81,6 @@ const statusCallback = asyncHandler(async (req, res) => {
 
   // process payment
 
-  // await Order.findOneAndUpdate(
-  //   { "paymentResult.id": data.uuid },
-  //   { $set: { "paymentResult.status": data.status } }
-  // );
-
   let order = await Order.findOne({ "paymentResult.id": data.uuid });
   order.paymentResult.status = data.status;
 
@@ -96,7 +91,7 @@ const statusCallback = asyncHandler(async (req, res) => {
 
   order.save();
 
-  res.status(200).end();
+  res.sendStatus(200);
 });
 
 export { createInvoice, statusCallback };

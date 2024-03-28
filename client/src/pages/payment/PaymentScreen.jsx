@@ -20,7 +20,7 @@ const PaymentScreen = () => {
   const { shippingAddress, paymentMethod: paymentMethodState } = cart;
 
   const [paymentMethod, setPaymentMethod] = useState(
-    paymentMethodState ? paymentMethodState : "Fiat"
+    paymentMethodState ? paymentMethodState : "Cryptocurrency"
   );
 
   useEffect(() => {
@@ -50,12 +50,13 @@ const PaymentScreen = () => {
           <div className="grid grid-cols-2 gap-5">
             <button
               type="button"
+              // disabled={true}
               onClick={() => setPaymentMethod("Fiat")}
               className={`border ${
                 paymentMethod === "Fiat"
                   ? "border-blue-500 shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px]"
                   : "border-gray-800"
-              } rounded-sm flex flex-col gap-y-2 justify-center items-center p-5 relative`}
+              } rounded-sm flex flex-col gap-y-2 justify-center items-center p-5 relative disabled:cursor-not-allowed`}
             >
               {paymentMethod === "Fiat" && (
                 <AiFillCheckCircle className="absolute right-[10px] top-[8%] text-blue-500" />
