@@ -50,7 +50,7 @@ const PaymentScreen = () => {
           <div className="grid grid-cols-2 gap-5">
             <button
               type="button"
-              // disabled={true}
+              disabled={true}
               onClick={() => setPaymentMethod("Fiat")}
               className={`border ${
                 paymentMethod === "Fiat"
