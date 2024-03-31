@@ -60,22 +60,29 @@ const OrderScreen = () => {
   const payOrderHandler = async () => {
     setPaymentLoading(true);
 
-    if (order.paymentMethod === "Cryptocurrency") {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
-
-      const { data } = await axios.post(
-        "/api/payment/create-invoice",
+    switch (order.paymentMethod) {
+      case "Cryptocurrency":
         {
-          totalAmount: addDecimals(order.totalPrice),
-          orderId,
-        },
-        config
-      );
-      window.location.href = data.result.url;
+          const config = {
+            headers: {
+              Authorization: `Bearer ${userInfo.token}`,
+            },
+          };
+
+          const { data } = await axios.post(
+            "/api/payment/create-invoice",
+            {
+              totalAmount: addDecimals(order.totalPrice),
+              orderId,
+            },
+            config
+          );
+          window.location.href = data.result.url;
+        }
+        break;
+
+      default:
+        break;
     }
 
     setPaymentLoading(false);
